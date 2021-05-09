@@ -4,6 +4,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"runtime"
 
 	"github.com/urfave/cli/v2"
@@ -20,23 +21,20 @@ func main() {
 	app.Usage = "IP Virtual Server controller"
 	app.Version = Version
 	app.Description = "ipvs controller communicate with ip_vs kernel module"
-	app.Authors = []*cli.Author{
-		{
-			Name:  "kwanhur",
-			Email: "huang_hua2012@163.com",
-		},
-	}
+	app.Authors = Authors()
 
 	cli.VersionPrinter = func(c *cli.Context) {
 		lvs, err := NewIPVS()
 		if err != nil {
-			fmt.Fprint(c.App.ErrWriter, err)
+			fmt.Fprintf(c.App.ErrWriter, "%s\n", err)
+			os.Exit(2)
 		}
 		defer lvs.Close()
 
 		info, err := lvs.Info()
 		if err != nil {
-			fmt.Fprint(c.App.ErrWriter, err)
+			fmt.Fprintf(c.App.ErrWriter, "%s\n", err)
+			os.Exit(2)
 		}
 
 		fmt.Fprintf(c.App.Writer, "IP Virtual Server version %s (size=%d)", info.Version.String(), info.ConnTableSize)

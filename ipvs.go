@@ -17,7 +17,7 @@ func NewIPVS() (*IPVS, error) {
 	ipvsMutex.Lock()
 	defer ipvsMutex.Unlock()
 
-	if handler, err := ipvs.New(); err != nil {
+	if handler, err := ipvs.New(""); err != nil {
 		return nil, err
 	} else {
 		return &IPVS{
