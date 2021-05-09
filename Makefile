@@ -10,6 +10,6 @@ all:clean build
 
 clean:
 	rm -f $(TARGET)
-build: clean
+build:
 	$(eval COMMITID=$(shell git rev-parse --short HEAD))
 	GOOS=$(GOOS) GOARCH=$(GOARCH) GO111MODULE=$(GO111MODULE) go build -ldflags "-s -w -X 'main.Version=v$(VERSION)' -X 'main.CommitID=$(COMMITID)' -X 'main.Built=$(BUILT)'" -v -o $(TARGET)
