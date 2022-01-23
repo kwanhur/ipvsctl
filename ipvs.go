@@ -6,7 +6,7 @@ import (
 	"github.com/kwanhur/ipvs"
 )
 
-var ipvsMutex sync.Mutex
+var mutex sync.Mutex
 
 type IPVS struct {
 	handler *ipvs.Handle
@@ -14,8 +14,8 @@ type IPVS struct {
 
 // NewIPVS return ipvs wrapper
 func NewIPVS() (*IPVS, error) {
-	ipvsMutex.Lock()
-	defer ipvsMutex.Unlock()
+	mutex.Lock()
+	defer mutex.Unlock()
 
 	if handler, err := ipvs.New(""); err != nil {
 		return nil, err
@@ -33,7 +33,17 @@ func (s *IPVS) Close() {
 	}
 }
 
-// Info return ipvs infomation, include version number and connection table size
+// Info return ipvs information, include version number and connection table size
 func (s *IPVS) Info() (*ipvs.Info, error) {
 	return s.handler.GetInfo()
+}
+
+// Config return ipvs configuration
+func (s *IPVS) Config() (*ipvs.Config, error) {
+	return s.handler.GetConfig()
+}
+
+// SetConfig set ipvs configuration
+func (s *IPVS) SetConfig(c *ipvs.Config) error {
+	return s.handler.SetConfig(c)
 }
