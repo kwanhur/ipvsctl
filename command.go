@@ -2,7 +2,26 @@ package main
 
 import "github.com/urfave/cli/v2"
 
-// TimeoutCommands return timeout relate operation, like get set
+// ServiceCommands return service relate operations, like get set flush import export
+func (o *Operator) ServiceCommands() []*cli.Command {
+	return []*cli.Command{
+		{
+			Name:    "service",
+			Aliases: []string{"s", "svc", "vs"},
+			Usage:   "Operates virtual service[vip:vport protocol] (TCP UDP STCP)/(IPv4 IPv6)",
+			Subcommands: []*cli.Command{
+				{
+					Name:    "flush",
+					Aliases: []string{"f"},
+					Usage:   "Flush ipvs, all the rules will be clear",
+					Action:  o.FlushService(),
+				},
+			},
+		},
+	}
+}
+
+// TimeoutCommands return timeout relate operations, like get set
 func (o *Operator) TimeoutCommands() []*cli.Command {
 	var cmds = []*cli.Command{
 		{
@@ -17,10 +36,11 @@ func (o *Operator) TimeoutCommands() []*cli.Command {
 					Action:  o.ShowTimeout(),
 				},
 				{
-					Name:    "set",
-					Aliases: []string{"s"},
-					Usage:   "Sets timeout of tcp tcpfin udp",
-					Action:  o.SetTimeout(),
+					Name:        "set",
+					Aliases:     []string{"s"},
+					Usage:       "Sets timeout of tcp tcpfin udp",
+					Description: `Change the timeout values used for IPVS connections. This command support 3 options, representing  the  timeout   values  (in seconds)  for TCP sessions, TCP sessions after receiving a  FIN packet, and  UDP  packets, respectively. A timeout value 0 means that the current timeout value of the  corresponding  entry  is preserved.`,
+					Action:      o.SetTimeout(),
 					Flags: []cli.Flag{
 						&cli.IntFlag{
 							Name:        "tcp",
@@ -43,7 +63,6 @@ func (o *Operator) TimeoutCommands() []*cli.Command {
 					},
 				},
 			},
-			Flags: nil,
 		},
 	}
 

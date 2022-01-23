@@ -10,7 +10,7 @@ import (
 
 type actionFunc func(lvs *IPVS) error
 
-func (o *Operator) operate(callback actionFunc) {
+func (o *Operator) show(callback actionFunc) {
 	lvs, err := NewIPVS()
 	if err != nil {
 		o.Fatal("%s\n", err)
@@ -22,10 +22,20 @@ func (o *Operator) operate(callback actionFunc) {
 	}
 }
 
+func (o Operator) doAction(callback actionFunc) error {
+	lvs, err := NewIPVS()
+	if err != nil {
+		return err
+	}
+	defer lvs.Close()
+
+	return callback(lvs)
+}
+
 func (o *Operator) ShowVersion() func(c *cli.Context) {
 	return func(c *cli.Context) {
 		o.ctx = c
-		o.operate(func(lvs *IPVS) error {
+		o.show(func(lvs *IPVS) error {
 			info, err := lvs.Info()
 			if err != nil {
 				return err
@@ -41,10 +51,19 @@ func (o *Operator) ShowVersion() func(c *cli.Context) {
 	}
 }
 
+func (o *Operator) FlushService() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			return lvs.Flush()
+		})
+	}
+}
+
 func (o *Operator) ShowTimeout() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
-		o.operate(func(lvs *IPVS) error {
+		return o.doAction(func(lvs *IPVS) error {
 			cfg, err := lvs.Config()
 			if err != nil {
 				return err
@@ -56,14 +75,13 @@ func (o *Operator) ShowTimeout() cli.ActionFunc {
 
 			return nil
 		})
-		return nil
 	}
 }
 
 func (o *Operator) SetTimeout() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
-		o.operate(func(lvs *IPVS) error {
+		return o.doAction(func(lvs *IPVS) error {
 			tcp := c.Int("tcp")
 			tcpfin := c.Int("tcpfin")
 			udp := c.Int("udp")
@@ -75,6 +93,5 @@ func (o *Operator) SetTimeout() cli.ActionFunc {
 			}
 			return lvs.SetConfig(&cfg)
 		})
-		return nil
 	}
 }

@@ -38,6 +38,11 @@ func (s *IPVS) Info() (*ipvs.Info, error) {
 	return s.handler.GetInfo()
 }
 
+// Flush clear out ipvs rules
+func (s *IPVS) Flush() error {
+	return s.handler.Flush()
+}
+
 // Config return ipvs configuration
 func (s *IPVS) Config() (*ipvs.Config, error) {
 	return s.handler.GetConfig()

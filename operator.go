@@ -16,15 +16,17 @@ func NewOperator() *Operator {
 }
 
 func (o *Operator) Commands() []*cli.Command {
-	cmds := o.TimeoutCommands()
+	var cmds []*cli.Command
+	cmds = append(cmds, o.ServiceCommands()...)
+	cmds = append(cmds, o.TimeoutCommands()...)
 	return cmds
 }
 
 func (o *Operator) Fatal(format string, a ...interface{}) {
-	fmt.Fprintf(o.ctx.App.ErrWriter, format, a...)
+	_, _ = fmt.Fprintf(o.ctx.App.ErrWriter, format, a...)
 	os.Exit(2)
 }
 
 func (o *Operator) Print(format string, a ...interface{}) {
-	fmt.Fprintf(o.ctx.App.Writer, format, a...)
+	_, _ = fmt.Fprintf(o.ctx.App.Writer, format, a...)
 }
