@@ -64,12 +64,14 @@ func (o *Operator) service() (*ipvs.Service, error) {
 		return nil, fmt.Errorf("invalid protocol %s", protocol)
 	}
 	sched := o.ctx.String("scheduler")
+	pe := o.ctx.String("persistent")
 
 	s := ipvs.Service{}
 	s.Address = vip
 	s.Port = vport
 	s.Protocol = protocol.Code()
 	s.SchedName = sched
+	s.PEName = pe
 
 	return &s, nil
 }

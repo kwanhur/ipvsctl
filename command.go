@@ -28,6 +28,11 @@ var vsOptionFlags = []cli.Flag{
 		Aliases: []string{"s", "sched"},
 		Usage:   "Specify vs scheduling method, option [rr wrr lc wlc lblc lblcr dh sh sed nq]",
 	},
+	&cli.StringFlag{
+		Name:    "persistent",
+		Aliases: []string{"pe", "per", "persis"},
+		Usage:   "Specify vs persistent name",
+	},
 }
 
 // ServiceCommands return service relate operations, like get set flush import export
