@@ -33,6 +33,11 @@ var vsOptionFlags = []cli.Flag{
 		Aliases: []string{"pe", "per", "persis"},
 		Usage:   "Specify vs persistent name",
 	},
+	&cli.UintFlag{
+		Name:        "timeout",
+		Usage:       "Specify persistent session timeout in seconds",
+		DefaultText: "300",
+	},
 }
 
 // ServiceCommands return service relate operations, like get set flush import export

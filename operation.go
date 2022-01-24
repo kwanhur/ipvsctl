@@ -66,6 +66,7 @@ func (o *Operator) service() (*ipvs.Service, error) {
 	}
 	sched := o.ctx.String("scheduler")
 	pe := o.ctx.String("persistent")
+	timeout := uint32(o.ctx.Uint("timeout"))
 
 	s := ipvs.Service{}
 	s.Address = vip
@@ -78,6 +79,7 @@ func (o *Operator) service() (*ipvs.Service, error) {
 	s.Protocol = protocol.Code()
 	s.SchedName = sched
 	s.PEName = pe
+	s.Timeout = timeout
 
 	return &s, nil
 }
