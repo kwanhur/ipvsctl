@@ -38,6 +38,11 @@ var vsOptionFlags = []cli.Flag{
 		Usage:       "Specify persistent session timeout in seconds",
 		DefaultText: "300",
 	},
+	&cli.UintFlag{
+		Name:    "netmask",
+		Aliases: []string{"M", "mask"},
+		Usage:   "Specify which clients are grouped for persistent virtual service, default IPv4/32 IPv6/128",
+	},
 }
 
 // ServiceCommands return service relate operations, like get set flush import export

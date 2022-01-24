@@ -67,10 +67,12 @@ func (o *Operator) service() (*ipvs.Service, error) {
 	sched := o.ctx.String("scheduler")
 	pe := o.ctx.String("persistent")
 	timeout := uint32(o.ctx.Uint("timeout"))
+	netmask := uint32(o.ctx.Uint("netmask"))
 
 	s := ipvs.Service{}
 	s.Address = vip
-	if vip.To4() == nil {
+	addrIPv6 := vip.To4() == nil
+	if addrIPv6 {
 		s.AddressFamily = syscall.IPPROTO_IPV6
 	} else {
 		s.AddressFamily = syscall.IPPROTO_IP
@@ -80,6 +82,12 @@ func (o *Operator) service() (*ipvs.Service, error) {
 	s.SchedName = sched
 	s.PEName = pe
 	s.Timeout = timeout
+	if addrIPv6 && (netmask == 0 || netmask > 128) {
+		netmask = 128
+	} else if !addrIPv6 && (netmask == 0 || netmask > 32) {
+		netmask = 32
+	}
+	s.Netmask = netmask
 
 	return &s, nil
 }
