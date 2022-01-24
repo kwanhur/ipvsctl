@@ -63,11 +63,13 @@ func (o *Operator) service() (*ipvs.Service, error) {
 	if !protocol.Support() {
 		return nil, fmt.Errorf("invalid protocol %s", protocol)
 	}
+	sched := o.ctx.String("scheduler")
 
 	s := ipvs.Service{}
 	s.Address = vip
 	s.Port = vport
 	s.Protocol = protocol.Code()
+	s.SchedName = sched
 
 	return &s, nil
 }

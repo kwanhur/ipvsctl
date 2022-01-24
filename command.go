@@ -22,6 +22,14 @@ var vsFlags = []cli.Flag{
 	},
 }
 
+var vsOptionFlags = []cli.Flag{
+	&cli.StringFlag{
+		Name:    "scheduler",
+		Aliases: []string{"s", "sched"},
+		Usage:   "Specify vs scheduling method, option [rr wrr lc wlc lblc lblcr dh sh sed nq]",
+	},
+}
+
 // ServiceCommands return service relate operations, like get set flush import export
 func (o *Operator) ServiceCommands() []*cli.Command {
 	return []*cli.Command{
@@ -36,7 +44,7 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 					Usage:       "Add ipvs virtual service",
 					Description: `Add a virtual service. A service address is uniquely defined by a triplet: IP address, port number,  and  protocol.  Alternatively,  a virtual service may be defined by a firewall-mark.`,
 					Action:      o.AddService(),
-					Flags:       vsFlags,
+					Flags:       append(vsFlags, vsOptionFlags...),
 				},
 				{
 					Name:    "del",
