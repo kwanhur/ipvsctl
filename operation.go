@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"net"
 	"runtime"
 	"time"
 
@@ -47,6 +49,30 @@ func (o *Operator) ShowVersion() func(c *cli.Context) {
 			o.Print("Built by %s %s/%s compiler %s at %s\n", runtime.Version(), runtime.GOOS, runtime.GOARCH, runtime.Compiler, Built)
 
 			return nil
+		})
+	}
+}
+
+func (o *Operator) AddService() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			vip := net.ParseIP(c.String("vip"))
+			if vip == nil {
+				return fmt.Errorf("invalid vip address %s\n", vip)
+			}
+			vport := uint16(c.Uint("vport"))
+			protocol := Protocol(c.String("protocol"))
+			if !protocol.Support() {
+				return fmt.Errorf("invalid protocol %s", protocol)
+			}
+
+			s := ipvs.Service{}
+			s.Address = vip
+			s.Port = vport
+			s.Protocol = protocol.Code()
+
+			return lvs.AddService(&s)
 		})
 	}
 }

@@ -38,6 +38,11 @@ func (s *IPVS) Info() (*ipvs.Info, error) {
 	return s.handler.GetInfo()
 }
 
+// AddService add ipvs service
+func (s *IPVS) AddService(svc *ipvs.Service) error {
+	return s.handler.NewService(svc)
+}
+
 // Flush clear out ipvs rules
 func (s *IPVS) Flush() error {
 	return s.handler.Flush()

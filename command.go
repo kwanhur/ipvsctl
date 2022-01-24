@@ -2,6 +2,26 @@ package main
 
 import "github.com/urfave/cli/v2"
 
+var vsFlags = []cli.Flag{
+	&cli.StringFlag{
+		Name:     "vip",
+		Usage:    "Specify vs IP address",
+		Required: true,
+	},
+	&cli.UintFlag{
+		Name:     "vport",
+		Usage:    "Specify vs port number, range [0-65535]",
+		Required: true,
+	},
+	&cli.StringFlag{
+		Name:        "protocol",
+		Aliases:     []string{"proto"},
+		Usage:       "Specify vs protocol, option [TCP UDP SCTP]",
+		DefaultText: "TCP",
+		Required:    true,
+	},
+}
+
 // ServiceCommands return service relate operations, like get set flush import export
 func (o *Operator) ServiceCommands() []*cli.Command {
 	return []*cli.Command{
@@ -10,6 +30,14 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 			Aliases: []string{"s", "svc", "vs"},
 			Usage:   "Operates virtual service[vip:vport protocol] (TCP UDP STCP)/(IPv4 IPv6)",
 			Subcommands: []*cli.Command{
+				{
+					Name:        "add",
+					Aliases:     []string{"a", "new", "n", "set", "s"},
+					Usage:       "Add ipvs virtual service",
+					Description: `Add a virtual service. A service address is uniquely defined by a triplet: IP address, port number,  and  protocol.  Alternatively,  a virtual service may be defined by a firewall-mark.`,
+					Action:      o.AddService(),
+					Flags:       vsFlags,
+				},
 				{
 					Name:    "flush",
 					Aliases: []string{"f"},
