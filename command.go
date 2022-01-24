@@ -39,6 +39,13 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 					Flags:       vsFlags,
 				},
 				{
+					Name:    "del",
+					Aliases: []string{"d", "delete"},
+					Usage:   "Del ipvs virtual service",
+					Action:  o.DelService(),
+					Flags:   vsFlags,
+				},
+				{
 					Name:    "flush",
 					Aliases: []string{"f"},
 					Usage:   "Flush ipvs, all the rules will be clear",

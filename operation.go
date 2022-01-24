@@ -53,26 +53,47 @@ func (o *Operator) ShowVersion() func(c *cli.Context) {
 	}
 }
 
+func (o *Operator) service() (*ipvs.Service, error) {
+	vip := net.ParseIP(o.ctx.String("vip"))
+	if vip == nil {
+		return nil, fmt.Errorf("invalid vip address %s\n", vip)
+	}
+	vport := uint16(o.ctx.Uint("vport"))
+	protocol := Protocol(o.ctx.String("protocol"))
+	if !protocol.Support() {
+		return nil, fmt.Errorf("invalid protocol %s", protocol)
+	}
+
+	s := ipvs.Service{}
+	s.Address = vip
+	s.Port = vport
+	s.Protocol = protocol.Code()
+
+	return &s, nil
+}
+
 func (o *Operator) AddService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			vip := net.ParseIP(c.String("vip"))
-			if vip == nil {
-				return fmt.Errorf("invalid vip address %s\n", vip)
+			if s, err := o.service(); err != nil {
+				return err
+			} else {
+				return lvs.AddService(s)
 			}
-			vport := uint16(c.Uint("vport"))
-			protocol := Protocol(c.String("protocol"))
-			if !protocol.Support() {
-				return fmt.Errorf("invalid protocol %s", protocol)
+		})
+	}
+}
+
+func (o *Operator) DelService() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			if s, err := o.service(); err != nil {
+				return err
+			} else {
+				return lvs.DelService(s)
 			}
-
-			s := ipvs.Service{}
-			s.Address = vip
-			s.Port = vport
-			s.Protocol = protocol.Code()
-
-			return lvs.AddService(&s)
 		})
 	}
 }

@@ -43,6 +43,11 @@ func (s *IPVS) AddService(svc *ipvs.Service) error {
 	return s.handler.NewService(svc)
 }
 
+// DelService delete ipvs service
+func (s IPVS) DelService(svc *ipvs.Service) error {
+	return s.handler.DelService(svc)
+}
+
 // Flush clear out ipvs rules
 func (s *IPVS) Flush() error {
 	return s.handler.Flush()
