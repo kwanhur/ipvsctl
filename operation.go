@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"runtime"
+	"syscall"
 	"time"
 
 	"github.com/kwanhur/ipvs"
@@ -68,6 +69,11 @@ func (o *Operator) service() (*ipvs.Service, error) {
 
 	s := ipvs.Service{}
 	s.Address = vip
+	if vip.To4() == nil {
+		s.AddressFamily = syscall.IPPROTO_IPV6
+	} else {
+		s.AddressFamily = syscall.IPPROTO_IP
+	}
 	s.Port = vport
 	s.Protocol = protocol.Code()
 	s.SchedName = sched
