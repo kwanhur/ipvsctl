@@ -73,9 +73,9 @@ func (o *Operator) service() (*ipvs.Service, error) {
 	s.Address = vip
 	addrIPv6 := vip.To4() == nil
 	if addrIPv6 {
-		s.AddressFamily = syscall.IPPROTO_IPV6
+		s.AddressFamily = syscall.AF_INET6
 	} else {
-		s.AddressFamily = syscall.IPPROTO_IP
+		s.AddressFamily = syscall.AF_INET
 	}
 	s.Port = vport
 	s.Protocol = protocol.IPProto()
