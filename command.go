@@ -53,6 +53,13 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 			Usage:   "Operates virtual service[vip:vport protocol] (TCP UDP STCP)/(IPv4 IPv6)",
 			Subcommands: []*cli.Command{
 				{
+					Name:    "string",
+					Aliases: []string{"s", "str"},
+					Usage:   "Present ipvs virtual service string",
+					Action:  o.StringService(),
+					Flags:   vsFlags,
+				},
+				{
 					Name:    "check",
 					Aliases: []string{"c", "chk", "exist", "find"},
 					Usage:   "Check ipvs virtual service exist or not",
@@ -61,7 +68,7 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 				},
 				{
 					Name:        "add",
-					Aliases:     []string{"a", "new", "n", "set", "s"},
+					Aliases:     []string{"a", "new", "n", "set"},
 					Usage:       "Add ipvs virtual service",
 					Description: `Add a virtual service. A service address is uniquely defined by a triplet: IP address, port number,  and  protocol.  Alternatively,  a virtual service may be defined by a firewall-mark.`,
 					Action:      o.AddService(),

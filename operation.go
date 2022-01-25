@@ -92,6 +92,21 @@ func (o *Operator) service() (*ipvs.Service, error) {
 	return &s, nil
 }
 
+func (o Operator) StringService() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			if s, err := o.service(); err != nil {
+				return err
+			} else {
+				o.Print("vs:%s\n", s.String())
+
+				return nil
+			}
+		})
+	}
+}
+
 func (o *Operator) ExistService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
