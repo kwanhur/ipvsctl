@@ -70,7 +70,7 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 				},
 				{
 					Name:    "flush",
-					Aliases: []string{"f"},
+					Aliases: []string{"f", "clear"},
 					Usage:   "Flush ipvs, all the rules will be clear",
 					Action:  o.FlushService(),
 				},
