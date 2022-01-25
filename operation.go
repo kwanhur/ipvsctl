@@ -78,7 +78,7 @@ func (o *Operator) service() (*ipvs.Service, error) {
 		s.AddressFamily = syscall.IPPROTO_IP
 	}
 	s.Port = vport
-	s.Protocol = protocol.Code()
+	s.Protocol = ipvs.IPProto(protocol.Code())
 	s.SchedName = sched
 	s.PEName = pe
 	s.Timeout = timeout
