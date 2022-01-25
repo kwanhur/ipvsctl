@@ -54,6 +54,13 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 			Usage:   "Operates virtual service[vip:vport protocol] (TCP UDP STCP)/(IPv4 IPv6)",
 			Subcommands: []*cli.Command{
 				{
+					Name:    "check",
+					Aliases: []string{"c", "chk", "exist", "find"},
+					Usage:   "Check ipvs virtual service exist or not",
+					Action:  o.ExistService(),
+					Flags:   vsFlags,
+				},
+				{
 					Name:        "add",
 					Aliases:     []string{"a", "new", "n", "set", "s"},
 					Usage:       "Add ipvs virtual service",

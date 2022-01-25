@@ -43,6 +43,10 @@ func (s *IPVS) AddService(svc *ipvs.Service) error {
 	return s.handler.NewService(svc)
 }
 
+func (s IPVS) ExistService(svc *ipvs.Service) bool {
+	return s.handler.IsServicePresent(svc)
+}
+
 // DelService delete ipvs service
 func (s IPVS) DelService(svc *ipvs.Service) error {
 	return s.handler.DelService(svc)
