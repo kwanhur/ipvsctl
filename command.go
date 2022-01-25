@@ -18,7 +18,6 @@ var vsFlags = []cli.Flag{
 		Aliases:     []string{"proto"},
 		Usage:       "Specify vs protocol, option [TCP UDP SCTP]",
 		DefaultText: "TCP",
-		Required:    true,
 	},
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/kwanhur/ipvs"
 	"strings"
 	"syscall"
 )
@@ -10,12 +11,12 @@ type IProtocol struct {
 }
 
 func Protocol(protocol string) IProtocol {
-	return IProtocol{proto: protocol}
+	return IProtocol{proto: strings.ToUpper(protocol)}
 }
 
 func (p *IProtocol) Code() uint16 {
 	switch strings.ToUpper(p.proto) {
-	case "TCP":
+	case "TCP", "":
 		return syscall.IPPROTO_TCP
 	case "UDP":
 		return syscall.IPPROTO_UDP
@@ -26,9 +27,13 @@ func (p *IProtocol) Code() uint16 {
 	}
 }
 
+func (p *IProtocol) IPProto() ipvs.IPProto {
+	return ipvs.IPProto(p.Code())
+}
+
 func (p *IProtocol) Support() bool {
 	switch p.proto {
-	case "TCP", "UDP", "SCTP":
+	case "", "TCP", "UDP", "SCTP":
 		return true
 	default:
 		return false
