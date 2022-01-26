@@ -96,6 +96,13 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 					Flags:   vsFlags,
 				},
 				{
+					Name:    "zero",
+					Aliases: []string{"z"},
+					Usage:   "Zero ipvs virtual server stats(byte packet and rate counters)",
+					Action:  o.ZeroService(),
+					Flags:   vsFlags,
+				},
+				{
 					Name:    "flush",
 					Aliases: []string{"f", "clear"},
 					Usage:   "Flush ipvs, all the rules will be clear",

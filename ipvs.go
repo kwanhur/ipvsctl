@@ -66,6 +66,11 @@ func (s IPVS) DelService(svc *ipvs.Service) error {
 	return s.handler.DelService(svc)
 }
 
+// ZeroService zero ipvs service stats
+func (s IPVS) ZeroService(svc *ipvs.Service) error {
+	return s.handler.ZeroService(svc)
+}
+
 // Flush clear out ipvs rules
 func (s *IPVS) Flush() error {
 	return s.handler.Flush()

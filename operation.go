@@ -166,6 +166,19 @@ func (o *Operator) DelService() cli.ActionFunc {
 	}
 }
 
+func (o Operator) ZeroService() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			if s, err := o.service(); err != nil {
+				return err
+			} else {
+				return lvs.ZeroService(s)
+			}
+		})
+	}
+}
+
 func (o *Operator) FlushService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
