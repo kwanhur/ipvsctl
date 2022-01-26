@@ -52,22 +52,28 @@ func (s *IPVS) Info() (*ipvs.Info, error) {
 	return s.handler.GetInfo()
 }
 
+// Zero ipvs services' stats
+func (s *IPVS) Zero() error {
+	return s.handler.Zero()
+}
+
 // AddService add ipvs service
 func (s *IPVS) AddService(svc *ipvs.Service) error {
 	return s.handler.NewService(svc)
 }
 
-func (s IPVS) ExistService(svc *ipvs.Service) bool {
+// ExistService exist ipvs service
+func (s *IPVS) ExistService(svc *ipvs.Service) bool {
 	return s.handler.IsServicePresent(svc)
 }
 
 // DelService delete ipvs service
-func (s IPVS) DelService(svc *ipvs.Service) error {
+func (s *IPVS) DelService(svc *ipvs.Service) error {
 	return s.handler.DelService(svc)
 }
 
 // ZeroService zero ipvs service stats
-func (s IPVS) ZeroService(svc *ipvs.Service) error {
+func (s *IPVS) ZeroService(svc *ipvs.Service) error {
 	return s.handler.ZeroService(svc)
 }
 

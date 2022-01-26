@@ -16,6 +16,15 @@ package main
 
 import "github.com/urfave/cli/v2"
 
+var flags = []cli.Flag{
+	&cli.BoolFlag{
+		Name:     "yes",
+		Aliases:  []string{"force", "f", "y"},
+		Usage:    "Are you agree to do it?[yes/no]",
+		Required: true,
+	},
+}
+
 var vsFlags = []cli.Flag{
 	&cli.StringFlag{
 		Name:     "vip",
@@ -56,6 +65,19 @@ var vsOptionFlags = []cli.Flag{
 		Aliases: []string{"M", "mask"},
 		Usage:   "Specify which clients are grouped for persistent virtual service, default IPv4/32 IPv6/128",
 	},
+}
+
+// BasicCommands return basic operations
+func (o *Operator) BasicCommands() []*cli.Command {
+	return []*cli.Command{
+		{
+			Name:    "zero",
+			Aliases: []string{"z"},
+			Usage:   "Zero ipvs all the virtual service stats(byte packet and rate counters)",
+			Action:  o.Zero(),
+			Flags:   flags,
+		},
+	}
 }
 
 // ServiceCommands return service relate operations, like get set flush import export

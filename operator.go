@@ -31,6 +31,7 @@ func NewOperator() *Operator {
 
 func (o *Operator) Commands() []*cli.Command {
 	var cmds []*cli.Command
+	cmds = append(cmds, o.BasicCommands()...)
 	cmds = append(cmds, o.ServiceCommands()...)
 	cmds = append(cmds, o.TimeoutCommands()...)
 	return cmds

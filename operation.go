@@ -106,7 +106,16 @@ func (o *Operator) service() (*ipvs.Service, error) {
 	return &s, nil
 }
 
-func (o Operator) StringService() cli.ActionFunc {
+func (o *Operator) Zero() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			return lvs.Zero()
+		})
+	}
+}
+
+func (o *Operator) StringService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
@@ -166,7 +175,7 @@ func (o *Operator) DelService() cli.ActionFunc {
 	}
 }
 
-func (o Operator) ZeroService() cli.ActionFunc {
+func (o *Operator) ZeroService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
