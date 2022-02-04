@@ -89,6 +89,12 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 			Usage:   "Operates virtual service[vip:vport protocol] (TCP UDP STCP)/(IPv4 IPv6)",
 			Subcommands: []*cli.Command{
 				{
+					Name:    "list",
+					Aliases: []string{"l", "ls"},
+					Usage:   "List ipvs virtual service",
+					Action:  o.ListService(),
+				},
+				{
 					Name:    "string",
 					Aliases: []string{"s", "str"},
 					Usage:   "Present ipvs virtual service string",

@@ -130,6 +130,24 @@ func (o *Operator) StringService() cli.ActionFunc {
 	}
 }
 
+func (o *Operator) ListService() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			services, err := lvs.Handler.GetServices()
+			if err != nil {
+				return err
+			} else {
+				o.Print("Protocol Vip:Vport (Scheduler)\n")
+				for _, s := range services {
+					o.Print("%s\n", s.String())
+				}
+				return nil
+			}
+		})
+	}
+}
+
 func (o *Operator) ExistService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -162,7 +180,7 @@ func (o *Operator) AddService() cli.ActionFunc {
 	}
 }
 
-func (o Operator) UpdateService() cli.ActionFunc {
+func (o *Operator) UpdateService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
