@@ -23,7 +23,7 @@ import (
 var mutex sync.Mutex
 
 type IPVS struct {
-	handler *ipvs.Handle
+	Handler *ipvs.Handle
 }
 
 // NewIPVS return ipvs wrapper
@@ -35,59 +35,14 @@ func NewIPVS() (*IPVS, error) {
 		return nil, err
 	} else {
 		return &IPVS{
-			handler: handler,
+			Handler: handler,
 		}, nil
 	}
 }
 
-// Close close ipvs netlink socket handler
+// Close close ipvs netlink socket Handler
 func (s *IPVS) Close() {
-	if s.handler != nil {
-		s.handler.Close()
+	if s.Handler != nil {
+		s.Handler.Close()
 	}
-}
-
-// Info return ipvs information, include version number and connection table size
-func (s *IPVS) Info() (*ipvs.Info, error) {
-	return s.handler.GetInfo()
-}
-
-// Zero ipvs services' stats
-func (s *IPVS) Zero() error {
-	return s.handler.Zero()
-}
-
-// AddService add ipvs service
-func (s *IPVS) AddService(svc *ipvs.Service) error {
-	return s.handler.NewService(svc)
-}
-
-// ExistService exist ipvs service
-func (s *IPVS) ExistService(svc *ipvs.Service) bool {
-	return s.handler.IsServicePresent(svc)
-}
-
-// DelService delete ipvs service
-func (s *IPVS) DelService(svc *ipvs.Service) error {
-	return s.handler.DelService(svc)
-}
-
-// ZeroService zero ipvs service stats
-func (s *IPVS) ZeroService(svc *ipvs.Service) error {
-	return s.handler.ZeroService(svc)
-}
-
-// Flush clear out ipvs rules
-func (s *IPVS) Flush() error {
-	return s.handler.Flush()
-}
-
-// Config return ipvs configuration
-func (s *IPVS) Config() (*ipvs.Config, error) {
-	return s.handler.GetConfig()
-}
-
-// SetConfig set ipvs configuration
-func (s *IPVS) SetConfig(c *ipvs.Config) error {
-	return s.handler.SetConfig(c)
 }

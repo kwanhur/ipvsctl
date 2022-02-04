@@ -53,7 +53,7 @@ func (o *Operator) ShowVersion() func(c *cli.Context) {
 	return func(c *cli.Context) {
 		o.ctx = c
 		o.show(func(lvs *IPVS) error {
-			info, err := lvs.Info()
+			info, err := lvs.Handler.GetInfo()
 			if err != nil {
 				return err
 			}
@@ -110,7 +110,7 @@ func (o *Operator) Zero() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			return lvs.Zero()
+			return lvs.Handler.Zero()
 		})
 	}
 }
@@ -137,7 +137,7 @@ func (o *Operator) ExistService() cli.ActionFunc {
 			if s, err := o.service(); err != nil {
 				return err
 			} else {
-				if ok := lvs.ExistService(s); ok {
+				if ok := lvs.Handler.IsServicePresent(s); ok {
 					o.Print("vs:%s found\n", s.String())
 				} else {
 					o.Print("vs:%s not found\n", s.String())
@@ -156,7 +156,7 @@ func (o *Operator) AddService() cli.ActionFunc {
 			if s, err := o.service(); err != nil {
 				return err
 			} else {
-				return lvs.AddService(s)
+				return lvs.Handler.NewService(s)
 			}
 		})
 	}
@@ -169,7 +169,7 @@ func (o *Operator) DelService() cli.ActionFunc {
 			if s, err := o.service(); err != nil {
 				return err
 			} else {
-				return lvs.DelService(s)
+				return lvs.Handler.DelService(s)
 			}
 		})
 	}
@@ -182,7 +182,7 @@ func (o *Operator) ZeroService() cli.ActionFunc {
 			if s, err := o.service(); err != nil {
 				return err
 			} else {
-				return lvs.ZeroService(s)
+				return lvs.Handler.ZeroService(s)
 			}
 		})
 	}
@@ -192,7 +192,7 @@ func (o *Operator) FlushService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			return lvs.Flush()
+			return lvs.Handler.Flush()
 		})
 	}
 }
@@ -201,7 +201,7 @@ func (o *Operator) ShowTimeout() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			cfg, err := lvs.Config()
+			cfg, err := lvs.Handler.GetConfig()
 			if err != nil {
 				return err
 			}
@@ -228,7 +228,7 @@ func (o *Operator) SetTimeout() cli.ActionFunc {
 				TimeoutTCPFin: time.Duration(tcpfin) * time.Second,
 				TimeoutUDP:    time.Duration(udp) * time.Second,
 			}
-			return lvs.SetConfig(&cfg)
+			return lvs.Handler.SetConfig(&cfg)
 		})
 	}
 }
