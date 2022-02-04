@@ -162,6 +162,19 @@ func (o *Operator) AddService() cli.ActionFunc {
 	}
 }
 
+func (o Operator) UpdateService() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			if s, err := o.service(); err != nil {
+				return err
+			} else {
+				return lvs.Handler.UpdateService(s)
+			}
+		})
+	}
+}
+
 func (o *Operator) DelService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c

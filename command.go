@@ -111,6 +111,13 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 					Flags:       append(vsFlags, vsOptionFlags...),
 				},
 				{
+					Name:    "update",
+					Aliases: []string{"u", "up"},
+					Usage:   "Update ipvs virtual service",
+					Action:  o.UpdateService(),
+					Flags:   append(vsFlags, vsOptionFlags...),
+				},
+				{
 					Name:    "del",
 					Aliases: []string{"d", "delete"},
 					Usage:   "Del ipvs virtual service",
