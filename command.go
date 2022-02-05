@@ -164,6 +164,25 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 	}
 }
 
+func (o *Operator) ServerCommands() []*cli.Command {
+	return []*cli.Command{
+		{
+			Name:    "server",
+			Aliases: []string{"ser", "svr", "d", "dst", "dest", "destination", "rs", "realserver"},
+			Usage:   "Operates real server[rip:rport] (IPv4/IPv6)",
+			Subcommands: []*cli.Command{
+				{
+					Name:    "list",
+					Aliases: []string{"l", "ls"},
+					Usage:   "List ipvs real server",
+					Action:  o.ListServer(),
+					Flags:   append(vsFlags, statFlags...),
+				},
+			},
+		},
+	}
+}
+
 // TimeoutCommands return timeout relate operations, like get set
 func (o *Operator) TimeoutCommands() []*cli.Command {
 	var cmds = []*cli.Command{

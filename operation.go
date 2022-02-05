@@ -277,6 +277,53 @@ func (o *Operator) FlushService() cli.ActionFunc {
 	}
 }
 
+func (o *Operator) ListServer() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			s, err := o.service()
+			if err != nil {
+				return err
+			}
+
+			svrs, err := lvs.Handler.GetDestinations(s)
+			if err != nil {
+				return err
+			}
+
+			stats := o.ctx.Bool("stats")
+
+			title := "Rip:Rport Weight (Forward) Threshold(lower-upper)\n"
+			if stats {
+				title = "Rip:Rport Weight (Forward) Threshold(lower-upper) ActConn InactConn PersConn Conn PktsIn PktsOut BytesIn BytesOut CPS BPSIn BPSOut PPSIn PPSOut\n"
+			}
+			o.Print(title)
+			for _, svr := range svrs {
+				var dest string
+				if svr.Address.To4() == nil {
+					dest = "[%s]:%d %d (%s) %d-%d"
+				} else {
+					dest = "%s:%d %d (%s) %d-%d"
+				}
+				dest = fmt.Sprintf(dest, svr.Address, svr.Port, svr.Weight, Forward(svr.ConnectionFlags), svr.LowerThreshold, svr.UpperThreshold)
+
+				if stats {
+					ss := svr.Stats
+					dest += fmt.Sprintf(" %d %d %d %d %d %d %d %d %d %d %d %d %d\n", svr.ActiveConnections,
+						svr.InactiveConnections, svr.PersistentConnections, ss.Connections,
+						ss.PacketsIn, ss.PacketsOut, ss.BytesIn, ss.BytesOut, ss.CPS, ss.BPSIn, ss.BPSOut,
+						ss.PPSIn, ss.PPSOut)
+				} else {
+					dest += "\n"
+				}
+				o.Print(dest)
+			}
+
+			return nil
+		})
+	}
+}
+
 func (o *Operator) ShowTimeout() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
