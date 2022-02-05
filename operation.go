@@ -138,9 +138,23 @@ func (o *Operator) ListService() cli.ActionFunc {
 			if err != nil {
 				return err
 			} else {
-				o.Print("Protocol Vip:Vport (Scheduler)\n")
+				stats := o.ctx.Bool("stats")
+
+				title := "Protocol Vip:Vport (Scheduler)\n"
+				if stats {
+					title = "Protocol Vip:Vport (Scheduler) Conn PktsIn PktsOut BytesIn BytesOut CPS BPSIn BPSOut PPSIn PPSOut\n"
+				}
+				o.Print(title)
+
 				for _, s := range services {
-					o.Print("%s\n", s.String())
+					if !stats {
+						o.Print("%s\n", s.String())
+					} else {
+						ss := s.Stats
+						o.Print("%s %d %d %d %d %d %d %d %d %d %d\n", s.String(), ss.Connections,
+							ss.PacketsIn, ss.PacketsOut, ss.BytesIn, ss.BytesOut, ss.CPS, ss.BPSIn, ss.BPSOut,
+							ss.PPSIn, ss.PPSOut)
+					}
 				}
 				return nil
 			}

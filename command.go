@@ -25,6 +25,14 @@ var flags = []cli.Flag{
 	},
 }
 
+var statFlags = []cli.Flag{
+	&cli.BoolFlag{
+		Name:    "stats",
+		Aliases: []string{"s", "stat"},
+		Usage:   "Show statistics information",
+	},
+}
+
 var vsFlags = []cli.Flag{
 	&cli.StringFlag{
 		Name:     "vip",
@@ -93,6 +101,7 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 					Aliases: []string{"l", "ls"},
 					Usage:   "List ipvs virtual service",
 					Action:  o.ListService(),
+					Flags:   statFlags,
 				},
 				{
 					Name:    "string",
