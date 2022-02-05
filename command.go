@@ -118,6 +118,13 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 					Flags:   vsFlags,
 				},
 				{
+					Name:    "get",
+					Aliases: []string{"g", "fetch", "one"},
+					Usage:   "Get ipvs virtual service",
+					Action:  o.GetService(),
+					Flags:   append(vsFlags, statFlags...),
+				},
+				{
 					Name:        "add",
 					Aliases:     []string{"a", "new", "n", "set"},
 					Usage:       "Add ipvs virtual service",

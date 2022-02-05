@@ -162,6 +162,41 @@ func (o *Operator) ListService() cli.ActionFunc {
 	}
 }
 
+func (o *Operator) GetService() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			if s, err := o.service(); err != nil {
+				return err
+			} else {
+				s, err := lvs.Handler.GetService(s)
+				if err != nil {
+					return err
+				}
+
+				stats := o.ctx.Bool("stats")
+
+				title := "Protocol Vip:Vport (Scheduler)\n"
+				if stats {
+					title = "Protocol Vip:Vport (Scheduler) Conn PktsIn PktsOut BytesIn BytesOut CPS BPSIn BPSOut PPSIn PPSOut\n"
+				}
+				o.Print(title)
+
+				if !stats {
+					o.Print("%s\n", s.String())
+				} else {
+					ss := s.Stats
+					o.Print("%s %d %d %d %d %d %d %d %d %d %d\n", s.String(), ss.Connections,
+						ss.PacketsIn, ss.PacketsOut, ss.BytesIn, ss.BytesOut, ss.CPS, ss.BPSIn, ss.BPSOut,
+						ss.PPSIn, ss.PPSOut)
+				}
+
+				return nil
+			}
+		})
+	}
+}
+
 func (o *Operator) ExistService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
