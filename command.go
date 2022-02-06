@@ -210,6 +210,13 @@ func (o *Operator) ServerCommands() []*cli.Command {
 					Action:  o.AddServer(),
 					Flags:   append(vsFlags, rsFlags...),
 				},
+				{
+					Name:    "del",
+					Aliases: []string{"d", "delete"},
+					Usage:   "Del ipvs real server",
+					Action:  o.DelServer(),
+					Flags:   append(vsFlags, rsFlags...),
+				},
 			},
 		},
 	}
