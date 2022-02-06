@@ -391,6 +391,29 @@ func (o *Operator) DelServer() cli.ActionFunc {
 	}
 }
 
+func (o *Operator) FlushServer() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			s, err := o.service()
+			if err != nil {
+				return err
+			}
+
+			svrs, err := lvs.Handler.GetDestinations(s)
+			if err != nil {
+				return err
+			}
+
+			for _, svr := range svrs {
+				_ = lvs.Handler.DelDestination(s, svr)
+			}
+
+			return nil
+		})
+	}
+}
+
 func (o *Operator) ShowTimeout() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c

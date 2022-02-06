@@ -217,6 +217,13 @@ func (o *Operator) ServerCommands() []*cli.Command {
 					Action:  o.DelServer(),
 					Flags:   append(vsFlags, rsFlags...),
 				},
+				{
+					Name:    "flush",
+					Aliases: []string{"f", "clear", "purge"},
+					Usage:   "Flush rs, all the real servers will be clear",
+					Action:  o.FlushServer(),
+					Flags:   vsFlags,
+				},
 			},
 		},
 	}
