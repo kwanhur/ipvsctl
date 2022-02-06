@@ -5,26 +5,62 @@ import (
 	"github.com/kwanhur/ipvs"
 )
 
-func Forward(flag uint32) string {
-	var fwd string
-	switch flag {
-	case ipvs.ConnFwdMask:
-		fwd = "mask"
-	case ipvs.ConnFwdLocalNode:
-		fwd = "local"
-	case ipvs.ConnFwdMasq:
-		fwd = "masq"
-	case ipvs.ConnFwdBypass:
-		fwd = "bypass"
-	case ipvs.ConnFwdDirectRoute:
+type Forward struct {
+	flag    uint32
+	forward string
+}
+
+func NewForward(flag uint32) *Forward {
+	return &Forward{flag: flag}
+}
+
+func NewForward2(fwd string) *Forward {
+	if fwd == "" {
 		fwd = "dr"
+	}
+	return &Forward{forward: fwd}
+}
+
+func (f *Forward) String() string {
+	switch f.flag {
+	case ipvs.ConnFwdMask:
+		f.forward = "mask"
+	case ipvs.ConnFwdLocalNode:
+		f.forward = "local"
+	case ipvs.ConnFwdMasq:
+		f.forward = "masq"
+	case ipvs.ConnFwdBypass:
+		f.forward = "bypass"
+	case ipvs.ConnFwdDirectRoute:
+		f.forward = "dr"
 	case ipvs.ConnFwdTunnel:
-		fwd = "tun"
+		f.forward = "tun"
 	case ipvs.ConnFwdFullNat:
-		fwd = "fnat"
+		f.forward = "fnat"
 	default:
-		fwd = fmt.Sprintf("unknown(%d)", flag)
+		f.forward = fmt.Sprintf("unknown(%d)", f.flag)
 	}
 
-	return fwd
+	return f.forward
+}
+
+func (f *Forward) Flag() uint32 {
+	switch f.forward {
+	case "mask":
+		f.flag = ipvs.ConnFwdMask
+	case "masq":
+		f.flag = ipvs.ConnFwdMasq
+	case "local":
+		f.flag = ipvs.ConnFwdLocalNode
+	case "bypass":
+		f.flag = ipvs.ConnFwdBypass
+	case "dr":
+		f.flag = ipvs.ConnFwdDirectRoute
+	case "tun":
+		f.flag = ipvs.ConnFwdTunnel
+	case "fnat":
+		f.flag = ipvs.ConnFwdFullNat
+	}
+
+	return f.flag
 }

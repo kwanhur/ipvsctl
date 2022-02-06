@@ -75,6 +75,31 @@ var vsOptionFlags = []cli.Flag{
 	},
 }
 
+var rsFlags = []cli.Flag{
+	&cli.StringFlag{
+		Name:     "rip",
+		Usage:    "Specify rs IP address",
+		Required: true,
+	},
+	&cli.UintFlag{
+		Name:     "rport",
+		Usage:    "Specify rs port number, range [0-65535]",
+		Required: true,
+	},
+	&cli.StringFlag{
+		Name:        "forward",
+		Aliases:     []string{"fwd"},
+		Usage:       "Specify rs connection flag, option [local mask masq bypass dr tun fnat]",
+		DefaultText: "dr",
+	},
+	&cli.IntFlag{
+		Name:        "weight",
+		Aliases:     []string{"w"},
+		Usage:       "Specify rs weight",
+		DefaultText: "0",
+	},
+}
+
 // BasicCommands return basic operations
 func (o *Operator) BasicCommands() []*cli.Command {
 	return []*cli.Command{
@@ -177,6 +202,13 @@ func (o *Operator) ServerCommands() []*cli.Command {
 					Usage:   "List ipvs real server",
 					Action:  o.ListServer(),
 					Flags:   append(vsFlags, statFlags...),
+				},
+				{
+					Name:    "add",
+					Aliases: []string{"a", "new", "n", "set"},
+					Usage:   "Add ipvs real server",
+					Action:  o.AddServer(),
+					Flags:   append(vsFlags, rsFlags...),
 				},
 			},
 		},

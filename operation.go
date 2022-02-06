@@ -106,6 +106,34 @@ func (o *Operator) service() (*ipvs.Service, error) {
 	return &s, nil
 }
 
+func (o *Operator) server() (*ipvs.Destination, error) {
+	rip := net.ParseIP(o.ctx.String("rip"))
+	if rip == nil {
+		return nil, fmt.Errorf("invalid rip address %s\n", rip)
+	}
+	rport := uint16(o.ctx.Uint("rport"))
+	weight := o.ctx.Int("weight")
+	forward := NewForward2(o.ctx.String("forward"))
+	fwd := forward.Flag()
+	if fwd == 0 {
+		return nil, fmt.Errorf("invalid forward %s\n", forward.String())
+	}
+
+	server := ipvs.Destination{}
+	server.Address = rip
+	server.Port = rport
+	if rip.To4() == nil {
+		server.AddressFamily = syscall.AF_INET6
+	} else {
+		server.AddressFamily = syscall.AF_INET
+	}
+
+	server.Weight = weight
+	server.ConnectionFlags = fwd
+
+	return &server, nil
+}
+
 func (o *Operator) Zero() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -305,7 +333,8 @@ func (o *Operator) ListServer() cli.ActionFunc {
 				} else {
 					dest = "%s:%d %d (%s) %d-%d"
 				}
-				dest = fmt.Sprintf(dest, svr.Address, svr.Port, svr.Weight, Forward(svr.ConnectionFlags), svr.LowerThreshold, svr.UpperThreshold)
+				fwd := NewForward(svr.ConnectionFlags)
+				dest = fmt.Sprintf(dest, svr.Address, svr.Port, svr.Weight, fwd.String(), svr.LowerThreshold, svr.UpperThreshold)
 
 				if stats {
 					ss := svr.Stats
@@ -320,6 +349,25 @@ func (o *Operator) ListServer() cli.ActionFunc {
 			}
 
 			return nil
+		})
+	}
+}
+
+func (o *Operator) AddServer() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			s, err := o.service()
+			if err != nil {
+				return err
+			}
+
+			d, err := o.server()
+			if err != nil {
+				return err
+			}
+
+			return lvs.Handler.NewDestination(s, d)
 		})
 	}
 }
