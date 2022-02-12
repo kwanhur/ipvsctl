@@ -134,6 +134,20 @@ func (o *Operator) server() (*ipvs.Destination, error) {
 	return &server, nil
 }
 
+func (o *Operator) daemon() *ipvs.Daemon {
+	state := uint32(o.ctx.Uint("state"))
+	syncId := uint32(o.ctx.Uint("sync-id"))
+	mcastIfn := o.ctx.String("mcast-ifn")
+
+	d := ipvs.Daemon{
+		State:    state,
+		SyncId:   syncId,
+		McastIfn: mcastIfn,
+	}
+
+	return &d
+}
+
 func (o *Operator) Zero() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -429,6 +443,43 @@ func (o *Operator) FlushServer() cli.ActionFunc {
 			}
 
 			return nil
+		})
+	}
+}
+
+func (o *Operator) ShowDaemon() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			daemons, err := lvs.Handler.GetDaemons()
+			if err != nil {
+				return err
+			}
+
+			o.Print("State SyncId McastIfn")
+			for _, d := range daemons {
+				o.Print("%d %d %s", d.State, d.SyncId, d.McastIfn)
+			}
+
+			return nil
+		})
+	}
+}
+
+func (o *Operator) AddDaemon() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			return lvs.Handler.NewDaemon(o.daemon())
+		})
+	}
+}
+
+func (o *Operator) DelDaemon() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			return lvs.Handler.DelDaemon(o.daemon())
 		})
 	}
 }

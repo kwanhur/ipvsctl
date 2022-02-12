@@ -100,6 +100,21 @@ var rsFlags = []cli.Flag{
 	},
 }
 
+var daemonFlags = []cli.Flag{
+	&cli.UintFlag{
+		Name:  "state",
+		Usage: "Specify daemon state",
+	},
+	&cli.UintFlag{
+		Name:  "sync-id",
+		Usage: "Specify daemon syncId",
+	},
+	&cli.StringFlag{
+		Name:  "mcast-ifn",
+		Usage: "Specify daemon mcastIfn",
+	},
+}
+
 // BasicCommands return basic operations
 func (o *Operator) BasicCommands() []*cli.Command {
 	return []*cli.Command{
@@ -231,6 +246,39 @@ func (o *Operator) ServerCommands() []*cli.Command {
 					Usage:   "Flush rs, all the real servers will be clear",
 					Action:  o.FlushServer(),
 					Flags:   vsFlags,
+				},
+			},
+		},
+	}
+}
+
+// DaemonCommands return daemon relate operations, like show add del
+func (o *Operator) DaemonCommands() []*cli.Command {
+	return []*cli.Command{
+		{
+			Name:    "daemon",
+			Aliases: []string{"dm"},
+			Usage:   "Operates daemon",
+			Subcommands: []*cli.Command{
+				{
+					Name:    "list",
+					Aliases: []string{"l", "ls"},
+					Usage:   "Shows daemons",
+					Action:  o.ShowDaemon(),
+				},
+				{
+					Name:    "add",
+					Aliases: []string{"a", "new", "n", "set"},
+					Usage:   "Add daemon",
+					Action:  o.AddDaemon(),
+					Flags:   daemonFlags,
+				},
+				{
+					Name:    "del",
+					Aliases: []string{"d", "del"},
+					Usage:   "Del daemon",
+					Action:  o.DelDaemon(),
+					Flags:   daemonFlags,
 				},
 			},
 		},
