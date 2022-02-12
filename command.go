@@ -189,6 +189,7 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 	}
 }
 
+// ServerCommands  return server relate operations, like add update del flush
 func (o *Operator) ServerCommands() []*cli.Command {
 	return []*cli.Command{
 		{
@@ -208,6 +209,13 @@ func (o *Operator) ServerCommands() []*cli.Command {
 					Aliases: []string{"a", "new", "n", "set"},
 					Usage:   "Add ipvs real server",
 					Action:  o.AddServer(),
+					Flags:   append(vsFlags, rsFlags...),
+				},
+				{
+					Name:    "update",
+					Aliases: []string{"u", "up"},
+					Usage:   "Update ipvs real server",
+					Action:  o.UpdateServer(),
 					Flags:   append(vsFlags, rsFlags...),
 				},
 				{

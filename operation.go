@@ -391,6 +391,25 @@ func (o *Operator) DelServer() cli.ActionFunc {
 	}
 }
 
+func (o *Operator) UpdateServer() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			s, err := o.service()
+			if err != nil {
+				return err
+			}
+
+			d, err := o.server()
+			if err != nil {
+				return err
+			}
+
+			return lvs.Handler.UpdateDestination(s, d)
+		})
+	}
+}
+
 func (o *Operator) FlushServer() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
