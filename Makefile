@@ -59,7 +59,7 @@ clean:
 	rm -f $(TARGET)
 
 build:
-	$(GOBUILD) $(LDFLAGS) -v -o $(TARGET)
+	$(GOBUILD) -ldflags $(LDFLAGS) -v -o $(TARGET)
 
 # make deps, install dependent tools
 deps:
