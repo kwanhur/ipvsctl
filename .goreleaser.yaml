@@ -1,0 +1,23 @@
+project_name: ipvsctl
+builds:
+  - env: [CGO_ENABLED=0]
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+
+checksum:
+  algorithm: sha512
+
+nfpms:
+  - maintainer: kwanhur <huang_hua2012@163.com>
+    description: A modern Linux Virtual Server controller.
+    vendor: kwanhur
+    homepage: https://github.com/kwanhur/ipvsctl
+    license: Apache 2.0
+    bindir: /usr/sbin
+    formats:
+      - deb
+      - rpm
+      - apk
