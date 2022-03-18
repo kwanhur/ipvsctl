@@ -23,20 +23,19 @@ builds:
     goos:
       - linux
     goarch:
-      - 386
       - amd64
-      - arm
       - arm64
-    goarm:
-      - 6
-      - 7
     mod_timestamp: '{{ .CommitTimestamp }}'
 
 checksum:
+  name_template: "{{ .ProjectName }}-{{ .Version }}_checksums.txt"
   algorithm: sha512
 
 nfpms:
-  - maintainer: kwanhur <huang_hua2012@163.com>
+  -
+    id: ipvsctl
+    file_name_template: "{{ .PackageName }}-{{ .Version }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}"
+    maintainer: kwanhur <huang_hua2012@163.com>
     description: A modern Linux Virtual Server controller.
     vendor: kwanhur
     homepage: https://github.com/kwanhur/ipvsctl
