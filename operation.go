@@ -149,6 +149,7 @@ func (o *Operator) daemon() *ipvs.Daemon {
 	return &d
 }
 
+// Zero clear out all the vs stats
 func (o *Operator) Zero() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -158,6 +159,7 @@ func (o *Operator) Zero() cli.ActionFunc {
 	}
 }
 
+// StringService print vs with builtin format
 func (o *Operator) StringService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -173,6 +175,7 @@ func (o *Operator) StringService() cli.ActionFunc {
 	}
 }
 
+// ListService retrieve all the vs then foreach to print
 func (o *Operator) ListService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -205,6 +208,7 @@ func (o *Operator) ListService() cli.ActionFunc {
 	}
 }
 
+// GetService retrieve vs then print it
 func (o *Operator) GetService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -240,6 +244,7 @@ func (o *Operator) GetService() cli.ActionFunc {
 	}
 }
 
+// ExistService check vs existed or not
 func (o *Operator) ExistService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -259,6 +264,7 @@ func (o *Operator) ExistService() cli.ActionFunc {
 	}
 }
 
+// AddService add vs into Linux virtual server table
 func (o *Operator) AddService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -272,6 +278,7 @@ func (o *Operator) AddService() cli.ActionFunc {
 	}
 }
 
+// UpdateService update vs attributes, like scheduler, persistent, timeout, netmask
 func (o *Operator) UpdateService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -285,6 +292,7 @@ func (o *Operator) UpdateService() cli.ActionFunc {
 	}
 }
 
+// DelService delete vs
 func (o *Operator) DelService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -298,6 +306,7 @@ func (o *Operator) DelService() cli.ActionFunc {
 	}
 }
 
+// ZeroService clear out vs' stats
 func (o *Operator) ZeroService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -311,6 +320,7 @@ func (o *Operator) ZeroService() cli.ActionFunc {
 	}
 }
 
+// FlushService clear out all of the Linux virtual table
 func (o *Operator) FlushService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -320,6 +330,7 @@ func (o *Operator) FlushService() cli.ActionFunc {
 	}
 }
 
+// ListServer Retrieve all the servers then foreach to print
 func (o *Operator) ListServer() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -368,6 +379,7 @@ func (o *Operator) ListServer() cli.ActionFunc {
 	}
 }
 
+// AddServer add rs into vs
 func (o *Operator) AddServer() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -387,6 +399,7 @@ func (o *Operator) AddServer() cli.ActionFunc {
 	}
 }
 
+// DelServer delete rs from vs
 func (o *Operator) DelServer() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -406,6 +419,7 @@ func (o *Operator) DelServer() cli.ActionFunc {
 	}
 }
 
+// UpdateServer update rs attributes (weight, forward)
 func (o *Operator) UpdateServer() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -425,6 +439,7 @@ func (o *Operator) UpdateServer() cli.ActionFunc {
 	}
 }
 
+// FlushServer clear out all the rs
 func (o *Operator) FlushServer() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -448,6 +463,7 @@ func (o *Operator) FlushServer() cli.ActionFunc {
 	}
 }
 
+// ShowDaemon print daemon infos
 func (o *Operator) ShowDaemon() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -467,6 +483,7 @@ func (o *Operator) ShowDaemon() cli.ActionFunc {
 	}
 }
 
+// AddDaemon add daemon into Linux virtual server table
 func (o *Operator) AddDaemon() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -476,6 +493,7 @@ func (o *Operator) AddDaemon() cli.ActionFunc {
 	}
 }
 
+// DelDaemon delete daemon
 func (o *Operator) DelDaemon() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -485,6 +503,7 @@ func (o *Operator) DelDaemon() cli.ActionFunc {
 	}
 }
 
+// ShowTimeout print timeout infos (tcp tcpfin udp)
 func (o *Operator) ShowTimeout() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
@@ -503,6 +522,7 @@ func (o *Operator) ShowTimeout() cli.ActionFunc {
 	}
 }
 
+// SetTimeout set timeout infos (tcp tcpfin udp)
 func (o *Operator) SetTimeout() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c

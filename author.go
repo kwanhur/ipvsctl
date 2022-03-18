@@ -16,6 +16,7 @@ package main
 
 import "github.com/urfave/cli/v2"
 
+// Authors author list
 func Authors() []*cli.Author {
 	return []*cli.Author{
 		{

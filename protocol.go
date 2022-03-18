@@ -15,19 +15,23 @@
 package main
 
 import (
-	"github.com/kwanhur/ipvs"
 	"strings"
 	"syscall"
+
+	"github.com/kwanhur/ipvs"
 )
 
+// IProtocol protocol wrapper
 type IProtocol struct {
 	proto string
 }
 
+// Protocol convert into an IProtocol wrapper
 func Protocol(protocol string) IProtocol {
 	return IProtocol{proto: strings.ToUpper(protocol)}
 }
 
+// Code fetch Protocol represents in syscall, non-supported is zero
 func (p *IProtocol) Code() uint16 {
 	switch strings.ToUpper(p.proto) {
 	case "TCP", "":
@@ -41,10 +45,12 @@ func (p *IProtocol) Code() uint16 {
 	}
 }
 
+// IPProto convert into IPProto represents ipvs
 func (p *IProtocol) IPProto() ipvs.IPProto {
 	return ipvs.IPProto(p.Code())
 }
 
+// Support check it's supported or not
 func (p *IProtocol) Support() bool {
 	switch p.proto {
 	case "", "TCP", "UDP", "SCTP":

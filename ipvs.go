@@ -22,6 +22,7 @@ import (
 
 var mutex sync.Mutex
 
+// IPVS a wrapper of ipvs with its handler
 type IPVS struct {
 	Handler *ipvs.Handle
 }

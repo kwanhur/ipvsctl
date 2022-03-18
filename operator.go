@@ -25,10 +25,12 @@ type Operator struct {
 	ctx *cli.Context
 }
 
+// NewOperator operator instance, include all commands (basic, service, server, timeout and daemon)
 func NewOperator() *Operator {
 	return &Operator{}
 }
 
+// Commands return supported commands
 func (o *Operator) Commands() []*cli.Command {
 	var cmds []*cli.Command
 	cmds = append(cmds, o.BasicCommands()...)
@@ -38,11 +40,13 @@ func (o *Operator) Commands() []*cli.Command {
 	return cmds
 }
 
+// Fatal print error message into STDERR, then exit
 func (o *Operator) Fatal(format string, a ...interface{}) {
 	_, _ = fmt.Fprintf(o.ctx.App.ErrWriter, format, a...)
 	os.Exit(2)
 }
 
+// Print output message into STDOUT
 func (o *Operator) Print(format string, a ...interface{}) {
 	_, _ = fmt.Fprintf(o.ctx.App.Writer, format, a...)
 }
