@@ -19,6 +19,14 @@
 
 A modern Linux Virtual Server controller.
 
+## Badges
+
+[![Software License](https://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=for-the-badge)](LICENSE)
+[![Build status](https://img.shields.io/github/workflow/status/kwanhur/ipvsctl/build?style=for-the-badge)](https://github.com/kwanhur/ipvsctl/actions?workflow=build)
+[![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=for-the-badge)](http://godoc.org/github.com/kwanhur/ipvsctl)
+[![Powered By: KWANHUR](https://img.shields.io/badge/powered%20by-kwanhur-green.svg?style=for-the-badge)](https://github.com/kwanhur)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=for-the-badge)](https://conventionalcommits.org)
+
 ## Description
 
 `ipvsctl` is similar to `ipvsadm`, `ipvsctl` support multiple modern operations, include sub-commands `service`, `server`, `timeout`, `zero`.
