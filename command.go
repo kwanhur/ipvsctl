@@ -86,19 +86,24 @@ var rsFlags = []cli.Flag{
 		Usage:    "Specify rs port number, range [0-65535]",
 		Required: true,
 	},
+}
+
+var rsFlags2 = append(rsFlags, []cli.Flag{
 	&cli.StringFlag{
 		Name:        "forward",
 		Aliases:     []string{"fwd"},
 		Usage:       "Specify rs connection flag, option [local mask masq bypass dr tun fnat]",
 		DefaultText: "dr",
+		Required:    true,
 	},
 	&cli.IntFlag{
 		Name:        "weight",
 		Aliases:     []string{"w"},
 		Usage:       "Specify rs weight",
 		DefaultText: "0",
+		Required:    true,
 	},
-}
+}...)
 
 var daemonFlags = []cli.Flag{
 	&cli.UintFlag{
@@ -224,14 +229,14 @@ func (o *Operator) ServerCommands() []*cli.Command {
 					Aliases: []string{"a", "new", "n", "set"},
 					Usage:   "Add ipvs real server",
 					Action:  o.AddServer(),
-					Flags:   append(vsFlags, rsFlags...),
+					Flags:   append(vsFlags, rsFlags2...),
 				},
 				{
 					Name:    "update",
 					Aliases: []string{"u", "up"},
 					Usage:   "Update ipvs real server",
 					Action:  o.UpdateServer(),
-					Flags:   append(vsFlags, rsFlags...),
+					Flags:   append(vsFlags, rsFlags2...),
 				},
 				{
 					Name:    "del",

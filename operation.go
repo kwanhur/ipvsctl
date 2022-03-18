@@ -39,7 +39,7 @@ func (o *Operator) show(callback actionFunc) {
 	}
 }
 
-func (o Operator) doAction(callback actionFunc) error {
+func (o *Operator) doAction(callback actionFunc) error {
 	lvs, err := NewIPVS()
 	if err != nil {
 		return err
@@ -49,6 +49,7 @@ func (o Operator) doAction(callback actionFunc) error {
 	return callback(lvs)
 }
 
+// ShowVersion print version information, include ipvs version, commit-id and go runtime info.
 func (o *Operator) ShowVersion() func(c *cli.Context) {
 	return func(c *cli.Context) {
 		o.ctx = c
@@ -115,8 +116,8 @@ func (o *Operator) server() (*ipvs.Destination, error) {
 	weight := o.ctx.Int("weight")
 	forward := NewForward2(o.ctx.String("forward"))
 	fwd := forward.Flag()
-	if fwd == 0 {
-		return nil, fmt.Errorf("invalid forward %s\n", forward.String())
+	if fwd >= connFwdUnknown {
+		return nil, fmt.Errorf("invalid forward %s\n", forward.forward)
 	}
 
 	server := ipvs.Destination{}
@@ -348,7 +349,7 @@ func (o *Operator) ListServer() cli.ActionFunc {
 					dest = "%s:%d %d (%s) %d-%d"
 				}
 				fwd := NewForward(svr.ConnectionFlags)
-				dest = fmt.Sprintf(dest, svr.Address, svr.Port, svr.Weight, fwd.String(), svr.LowerThreshold, svr.UpperThreshold)
+				dest = fmt.Sprintf(dest, svr.Address, svr.Port, svr.Weight, fwd.Forward(), svr.LowerThreshold, svr.UpperThreshold)
 
 				if stats {
 					ss := svr.Stats

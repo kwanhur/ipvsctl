@@ -328,8 +328,6 @@ OPTIONS:
    --protocol value, --proto value  Specify vs protocol, option [TCP UDP SCTP] (default: TCP)
    --rip value                      Specify rs IP address
    --rport value                    Specify rs port number, range [0-65535] (default: 0)
-   --forward value, --fwd value     Specify rs connection flag, option [local mask masq bypass dr tun fnat] (default: dr)
-   --weight value, -w value         Specify rs weight (default: 0)
    --help, -h                       show help (default: false)
 ```
 
