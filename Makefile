@@ -40,7 +40,7 @@ NPMINSTALL   := $(NPM) install
 # init ipvsctl version
 VERSION ?= $(shell cat VERSION)
 # init git commit id
-GIT_COMMIT ?= $(shell git rev-parse HEAD)
+COMMITID ?= $(shell git rev-parse --short HEAD)
 # init built date
 BUILT=`date`
 # init built target
