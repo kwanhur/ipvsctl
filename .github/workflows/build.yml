@@ -1,0 +1,35 @@
+name: build
+
+on:
+  push:
+    branches:
+      - 'main'
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  ipvsctl-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: Setup ipvs
+        shell: bash
+        run: |
+          modprobe ip_vs
+          modinfo ip_vs
+
+      - name: Build
+        shell: bash
+        run: |
+          make build
+          ./ipvsctl -v

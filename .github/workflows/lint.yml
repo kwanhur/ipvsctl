@@ -1,0 +1,36 @@
+name: build
+
+on:
+  push:
+    branches:
+      - 'main'
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check license header
+        uses: apache/skywalking-eyes@main
+
+      - name: Setup Nodejs
+        uses: actions/setup-node@v3.0.0
+        with:
+          node-version: '12'
+
+      - name: Install markdwonlint
+        shell: bash
+        run: |
+          npm install -g markdownlint-cli
+
+      - name: Check markdown
+        shell: bash
+        run: |
+          make mdlint
