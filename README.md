@@ -21,6 +21,7 @@ A modern Linux Virtual Server controller.
 
 ## Badges
 
+[![Release](https://img.shields.io/github/release/kwanhur/ipvsctl.svg?style=for-the-badge)](https://github.com/kwanhur/ipvsctl/releases/latest)
 [![Software License](https://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=for-the-badge)](LICENSE)
 [![Build status](https://img.shields.io/github/workflow/status/kwanhur/ipvsctl/build?style=for-the-badge)](https://github.com/kwanhur/ipvsctl/actions?workflow=build)
 [![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=for-the-badge)](http://godoc.org/github.com/kwanhur/ipvsctl)
