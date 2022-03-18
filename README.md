@@ -287,6 +287,29 @@ OPTIONS:
    --help, -h                       show help (default: false)
 ```
 
+#### Update Server
+
+Update real server attributes `forward`, `weight` with specified virtual service.
+
+```shell
+./ipvsctl server update -h
+NAME:
+   ipvsctl server update - Update ipvs real server
+
+USAGE:
+   ipvsctl server update [command options] [arguments...]
+
+OPTIONS:
+   --vip value                      Specify vs IP address
+   --vport value                    Specify vs port number, range [0-65535] (default: 0)
+   --protocol value, --proto value  Specify vs protocol, option [TCP UDP SCTP] (default: TCP)
+   --rip value                      Specify rs IP address
+   --rport value                    Specify rs port number, range [0-65535] (default: 0)
+   --forward value, --fwd value     Specify rs connection flag, option [local mask masq bypass dr tun fnat] (default: dr)
+   --weight value, -w value         Specify rs weight (default: 0)
+   --help, -h                       show help (default: false)
+```
+
 #### Delete Server
 
 Delete one real server with specified virtual service.
