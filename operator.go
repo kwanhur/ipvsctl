@@ -12,32 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-//go:build linux
-// +build linux
-
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/urfave/cli/v2"
 )
 
-var (
-	Version  string
-	CommitID string
-	Built    string
-)
+type Operator struct {
+	ctx *cli.Context
+}
 
-func main() {
-	app := cli.NewApp()
-	app.Usage = "IP Virtual Server controller"
-	app.Version = Version
-	app.Description = "ipvs controller communicate with ip_vs kernel module"
-	app.Authors = Authors()
+func NewOperator() *Operator {
+	return &Operator{}
+}
 
-	opr := NewOperator()
-	cli.VersionPrinter = opr.ShowVersion()
+func (o *Operator) Commands() []*cli.Command {
+	var cmds []*cli.Command
+	cmds = append(cmds, o.BasicCommands()...)
+	cmds = append(cmds, o.ServiceCommands()...)
+	cmds = append(cmds, o.ServerCommands()...)
+	cmds = append(cmds, o.TimeoutCommands()...)
+	return cmds
+}
 
-	app.Commands = opr.Commands()
+func (o *Operator) Fatal(format string, a ...interface{}) {
+	_, _ = fmt.Fprintf(o.ctx.App.ErrWriter, format, a...)
+	os.Exit(2)
+}
 
-	app.RunAndExitOnError()
+func (o *Operator) Print(format string, a ...interface{}) {
+	_, _ = fmt.Fprintf(o.ctx.App.Writer, format, a...)
 }

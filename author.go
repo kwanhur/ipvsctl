@@ -14,35 +14,13 @@
 //
 package main
 
-import (
-	"sync"
+import "github.com/urfave/cli/v2"
 
-	"github.com/kwanhur/ipvs"
-)
-
-var mutex sync.Mutex
-
-type IPVS struct {
-	Handler *ipvs.Handle
-}
-
-// NewIPVS return ipvs wrapper
-func NewIPVS() (*IPVS, error) {
-	mutex.Lock()
-	defer mutex.Unlock()
-
-	if handler, err := ipvs.New(""); err != nil {
-		return nil, err
-	} else {
-		return &IPVS{
-			Handler: handler,
-		}, nil
-	}
-}
-
-// Close close ipvs netlink socket Handler
-func (s *IPVS) Close() {
-	if s.Handler != nil {
-		s.Handler.Close()
+func Authors() []*cli.Author {
+	return []*cli.Author{
+		{
+			Name:  "kwanhur",
+			Email: "huang_hua2012@163.com",
+		},
 	}
 }

@@ -15,34 +15,41 @@
 package main
 
 import (
-	"sync"
-
 	"github.com/kwanhur/ipvs"
+	"strings"
+	"syscall"
 )
 
-var mutex sync.Mutex
-
-type IPVS struct {
-	Handler *ipvs.Handle
+type IProtocol struct {
+	proto string
 }
 
-// NewIPVS return ipvs wrapper
-func NewIPVS() (*IPVS, error) {
-	mutex.Lock()
-	defer mutex.Unlock()
+func Protocol(protocol string) IProtocol {
+	return IProtocol{proto: strings.ToUpper(protocol)}
+}
 
-	if handler, err := ipvs.New(""); err != nil {
-		return nil, err
-	} else {
-		return &IPVS{
-			Handler: handler,
-		}, nil
+func (p *IProtocol) Code() uint16 {
+	switch strings.ToUpper(p.proto) {
+	case "TCP", "":
+		return syscall.IPPROTO_TCP
+	case "UDP":
+		return syscall.IPPROTO_UDP
+	case "SCTP":
+		return syscall.IPPROTO_SCTP
+	default:
+		return 0
 	}
 }
 
-// Close close ipvs netlink socket Handler
-func (s *IPVS) Close() {
-	if s.Handler != nil {
-		s.Handler.Close()
+func (p *IProtocol) IPProto() ipvs.IPProto {
+	return ipvs.IPProto(p.Code())
+}
+
+func (p *IProtocol) Support() bool {
+	switch p.proto {
+	case "", "TCP", "UDP", "SCTP":
+		return true
+	default:
+		return false
 	}
 }
