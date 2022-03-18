@@ -14,9 +14,10 @@
 #
 repos:
 - repo: git://github.com/dnephin/pre-commit-golang
-  rev: v0.4.0
+  rev: v0.5.0
   hooks:
     - id: go-fmt
     - id: go-vet
-    - id: go-unit-tests
-    - id: go-build
+    - id: go-lint
+    - id: go-imports
+    - id: go-mod-tidy
