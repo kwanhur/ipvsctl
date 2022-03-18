@@ -16,18 +16,24 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/kwanhur/ipvs"
 )
 
+const connFwdUnknown = 8
+
+// Forward real server forward mode
 type Forward struct {
 	flag    uint32
 	forward string
 }
 
+// NewForward forward initial with flag
 func NewForward(flag uint32) *Forward {
 	return &Forward{flag: flag}
 }
 
+// NewForward2 forward initial with forward name
 func NewForward2(fwd string) *Forward {
 	if fwd == "" {
 		fwd = "dr"
@@ -35,7 +41,8 @@ func NewForward2(fwd string) *Forward {
 	return &Forward{forward: fwd}
 }
 
-func (f *Forward) String() string {
+// Forward lower name
+func (f *Forward) Forward() string {
 	switch f.flag {
 	case ipvs.ConnFwdMask:
 		f.forward = "mask"
@@ -58,6 +65,7 @@ func (f *Forward) String() string {
 	return f.forward
 }
 
+// Flag forward flag
 func (f *Forward) Flag() uint32 {
 	switch f.forward {
 	case "mask":
@@ -74,6 +82,8 @@ func (f *Forward) Flag() uint32 {
 		f.flag = ipvs.ConnFwdTunnel
 	case "fnat":
 		f.flag = ipvs.ConnFwdFullNat
+	default:
+		f.flag = connFwdUnknown
 	}
 
 	return f.flag
