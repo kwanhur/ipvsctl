@@ -39,11 +39,11 @@ jobs:
       - name: Setup ipvs
         shell: bash
         run: |
-          modprobe ip_vs
-          modinfo ip_vs
+          sudo modprobe ip_vs
+          sudo modinfo ip_vs
 
       - name: Build
         shell: bash
         run: |
           make build
-          ./ipvsctl -v
+          sudo ./ipvsctl -v
