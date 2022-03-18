@@ -14,12 +14,24 @@
 #
 project_name: ipvsctl
 builds:
-  - env: [CGO_ENABLED=0]
+  - id: ipvsctl
+    binary: ipvsctl
+    ldflags:
+      - -s -w -X main.Version=v{{.Version}} -X main.CommitID={{.Commit}} -X main.Built={{.CommitDate}}
+    env:
+      - CGO_ENABLED=0
     goos:
       - linux
     goarch:
+      - 386
       - amd64
+      - arm
       - arm64
+    goarm:
+      - 6
+      - 7
+    gobinary: "go1.17"
+    mod_timestamp: '{{ .CommitTimestamp }}'
 
 checksum:
   algorithm: sha512
