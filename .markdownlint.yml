@@ -12,17 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-header:
-  license:
-    spdx-id: Apache-2.0
-    copyright-owner: kwanhur
-
-  paths-ignore:
-    - '.gitignore'
-    - 'LICENSE'
-    - 'NOTICE'
-    - 'VERSION'
-    - 'go.mod'
-    - 'go.sum'
-
-  comment: on-failure
+MD001: false
+MD004: false
+MD005: false
+MD006: false
+MD007: false
+MD010: false
+MD013: false
+MD014: false
+MD024: false
+MD026: false
+MD029: false
+MD033: false
+MD034: false
+MD036: false
+MD040: false
+MD041: false
+MD046: false
