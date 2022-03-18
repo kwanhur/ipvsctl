@@ -30,7 +30,6 @@ builds:
     goarm:
       - 6
       - 7
-    gobinary: "go1.17.1"
     mod_timestamp: '{{ .CommitTimestamp }}'
 
 checksum:
