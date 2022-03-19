@@ -22,16 +22,19 @@ import (
 )
 
 var (
-	Version  string
+	// Version ipvsctl version
+	Version string
+	// CommitID ipvsctl git commit id
 	CommitID string
-	Built    string
+	// Built build ipvsctl date
+	Built string
 )
 
 func main() {
 	app := cli.NewApp()
 	app.Usage = "IP Virtual Server controller"
 	app.Version = Version
-	app.Description = "ipvs controller communicate with ip_vs kernel module"
+	app.Description = "A modern Linux Virtual Server controller"
 	app.Authors = Authors()
 
 	opr := NewOperator()
