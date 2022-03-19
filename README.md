@@ -437,3 +437,7 @@ OPTIONS:
    --yes, --force, -f, -y  Are you agree to do it?[yes/no] (default: false)
    --help, -h              show help (default: false)
 ```
+
+## License
+
+[Apache License 2.0](LICENSE)
