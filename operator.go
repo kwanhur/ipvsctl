@@ -21,6 +21,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// Operator ipvsctl operators
 type Operator struct {
 	ctx *cli.Context
 }
@@ -37,6 +38,7 @@ func (o *Operator) Commands() []*cli.Command {
 	cmds = append(cmds, o.ServiceCommands()...)
 	cmds = append(cmds, o.ServerCommands()...)
 	cmds = append(cmds, o.TimeoutCommands()...)
+	cmds = append(cmds, o.DaemonCommands()...)
 	return cmds
 }
 
