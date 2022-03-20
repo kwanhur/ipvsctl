@@ -31,7 +31,7 @@ A modern Linux Virtual Server controller.
 
 ## Description
 
-`ipvsctl` is similar to `ipvsadm`, `ipvsctl` support multiple modern operations, include sub-commands `service`, `server`, `timeout`, `zero`, `daemon`.
+`ipvsctl` is similar to `ipvsadm`, `ipvsctl` support multiple modern operations, include sub-commands `service`, `server`, `timeout`, `daemon`, `zero`, `flush`.
 
 ## Commands
 
@@ -54,6 +54,7 @@ AUTHOR:
 
 COMMANDS:
    zero, z                                                      Zero ipvs all the virtual service stats(byte packet and rate counters)
+   flush, f, clear                                              Flush out the virtual server table
    service, s, svc, vs                                          Operates virtual service[vip:vport protocol] (TCP UDP STCP)/(IPv4 IPv6)
    server, ser, svr, d, dst, dest, destination, rs, realserver  Operates real server[rip:rport] (IPv4/IPv6)
    timeout, t, to, out                                          Operates timeout (tcp tcpfin udp)
@@ -88,7 +89,7 @@ COMMANDS:
    update, u, up               Update ipvs virtual service
    del, d, delete              Del ipvs virtual service
    zero, z                     Zero ipvs virtual server stats(byte packet and rate counters)
-   flush, f, clear             Flush ipvs, all the rules will be clear
+   flush, f, clear             Flush out the virtual server table
    help, h                     Shows a list of commands or help for one command
 
 OPTIONS:
@@ -469,6 +470,23 @@ OPTIONS:
    --help, -h              show help (default: false)
 ```
 
+### Flush
+
+It's used to clear out the virtual server table.
+
+```shell
+./ipvsctl flush -h
+NAME:
+   ipvsctl flush - Flush out the virtual server table
+
+USAGE:
+   ipvsctl flush [command options] [arguments...]
+
+OPTIONS:
+   --yes, --force, -f, -y  Are you agree to do it?[yes/no] (default: false)
+   --help, -h              show help (default: false)
+```
+
 ### Daemon
 
 The connection synchronization daemon is implemented inside the Linux kernel. The master daemon running at the primary load  balancer  multicasts  changes  of
@@ -532,7 +550,7 @@ OPTIONS:
    --help, -h         show help (default: false)
 ```
 
-#### Del Daemon
+#### Delete Daemon
 
 Stop the connection synchronization daemon.
 
