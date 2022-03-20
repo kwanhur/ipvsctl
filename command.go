@@ -105,21 +105,6 @@ var rsFlags2 = append(rsFlags, []cli.Flag{
 	},
 }...)
 
-var daemonFlags = []cli.Flag{
-	&cli.UintFlag{
-		Name:  "state",
-		Usage: "Specify daemon state",
-	},
-	&cli.UintFlag{
-		Name:  "sync-id",
-		Usage: "Specify daemon syncId",
-	},
-	&cli.StringFlag{
-		Name:  "mcast-ifn",
-		Usage: "Specify daemon mcastIfn",
-	},
-}
-
 // BasicCommands return basic operations
 func (o *Operator) BasicCommands() []*cli.Command {
 	return []*cli.Command{
@@ -266,24 +251,46 @@ func (o *Operator) DaemonCommands() []*cli.Command {
 			Usage:   "Operates daemon",
 			Subcommands: []*cli.Command{
 				{
-					Name:    "list",
-					Aliases: []string{"l", "ls"},
-					Usage:   "Shows daemons",
+					Name:    "show",
+					Aliases: []string{"ls", "get"},
+					Usage:   "Shows daemons of state, sync-id and mcast-interface",
 					Action:  o.ShowDaemon(),
 				},
 				{
 					Name:    "add",
 					Aliases: []string{"a", "new", "n", "set"},
-					Usage:   "Add daemon",
+					Usage:   "Add daemon, currently only supports IPv4 connections",
 					Action:  o.AddDaemon(),
-					Flags:   daemonFlags,
+					Flags: []cli.Flag{
+						&cli.StringFlag{
+							Name:     "state",
+							Usage:    "Specify daemon state, option [master backup]",
+							Required: true,
+						},
+						&cli.UintFlag{
+							Name:     "sync-id",
+							Usage:    "Specify daemon syncId",
+							Required: true,
+						},
+						&cli.StringFlag{
+							Name:     "mcast-ifn",
+							Usage:    "Specify daemon mcast-interface",
+							Required: true,
+						},
+					},
 				},
 				{
 					Name:    "del",
 					Aliases: []string{"d", "del"},
 					Usage:   "Del daemon",
 					Action:  o.DelDaemon(),
-					Flags:   daemonFlags,
+					Flags: []cli.Flag{
+						&cli.StringFlag{
+							Name:     "state",
+							Usage:    "Specify daemon state, option [master backup]",
+							Required: true,
+						},
+					},
 				},
 			},
 		},

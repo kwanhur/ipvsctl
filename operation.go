@@ -72,7 +72,7 @@ func (o *Operator) ShowVersion() func(c *cli.Context) {
 func (o *Operator) service() (*ipvs.Service, error) {
 	vip := net.ParseIP(o.ctx.String("vip"))
 	if vip == nil {
-		return nil, fmt.Errorf("invalid vip address %s\n", vip)
+		return nil, fmt.Errorf("invalid vip address %s", vip)
 	}
 	vport := uint16(o.ctx.Uint("vport"))
 	protocol := Protocol(o.ctx.String("protocol"))
@@ -110,14 +110,14 @@ func (o *Operator) service() (*ipvs.Service, error) {
 func (o *Operator) server() (*ipvs.Destination, error) {
 	rip := net.ParseIP(o.ctx.String("rip"))
 	if rip == nil {
-		return nil, fmt.Errorf("invalid rip address %s\n", rip)
+		return nil, fmt.Errorf("invalid rip address %s", rip)
 	}
 	rport := uint16(o.ctx.Uint("rport"))
 	weight := o.ctx.Int("weight")
 	forward := NewForward2(o.ctx.String("forward"))
 	fwd := forward.Flag()
 	if fwd >= connFwdUnknown {
-		return nil, fmt.Errorf("invalid forward %s\n", forward.forward)
+		return nil, fmt.Errorf("invalid forward %s", forward.forward)
 	}
 
 	server := ipvs.Destination{}
@@ -135,18 +135,44 @@ func (o *Operator) server() (*ipvs.Destination, error) {
 	return &server, nil
 }
 
-func (o *Operator) daemon() *ipvs.Daemon {
-	state := uint32(o.ctx.Uint("state"))
-	syncId := uint32(o.ctx.Uint("sync-id"))
+func (o *Operator) daemon() (*ipvs.Daemon, error) {
+	state := o.ctx.String("state")
+	var stateCode uint32
+	switch state {
+	case "master":
+		stateCode = ipvs.DaemonStateMaster
+	case "backup":
+		stateCode = ipvs.DaemonStateBackup
+	default:
+		return nil, fmt.Errorf("illegal state")
+	}
+
+	syncID := uint32(o.ctx.Uint("sync-id"))
 	mcastIfn := o.ctx.String("mcast-ifn")
 
 	d := ipvs.Daemon{
-		State:    state,
-		SyncId:   syncId,
+		State:    stateCode,
+		SyncId:   syncID,
 		McastIfn: mcastIfn,
 	}
 
-	return &d
+	return &d, nil
+}
+
+func (o *Operator) daemonState(code uint32) string {
+	var state string
+	switch code {
+	case ipvs.DaemonStateNone:
+		state = "stop"
+	case ipvs.DaemonStateMaster:
+		state = "master"
+	case ipvs.DaemonStateBackup:
+		state = "backup"
+	default:
+		state = fmt.Sprintf("unknown state(%d)", code)
+	}
+
+	return state
 }
 
 // Zero clear out all the vs stats
@@ -164,13 +190,13 @@ func (o *Operator) StringService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			if s, err := o.service(); err != nil {
+			s, err := o.service()
+			if err != nil {
 				return err
-			} else {
-				o.Print("vs:%s\n", s.String())
-
-				return nil
 			}
+
+			o.Print("vs:%s\n", s.String())
+			return nil
 		})
 	}
 }
@@ -183,27 +209,27 @@ func (o *Operator) ListService() cli.ActionFunc {
 			services, err := lvs.Handler.GetServices()
 			if err != nil {
 				return err
-			} else {
-				stats := o.ctx.Bool("stats")
-
-				title := "Protocol Vip:Vport (Scheduler)\n"
-				if stats {
-					title = "Protocol Vip:Vport (Scheduler) Conn PktsIn PktsOut BytesIn BytesOut CPS BPSIn BPSOut PPSIn PPSOut\n"
-				}
-				o.Print(title)
-
-				for _, s := range services {
-					if !stats {
-						o.Print("%s\n", s.String())
-					} else {
-						ss := s.Stats
-						o.Print("%s %d %d %d %d %d %d %d %d %d %d\n", s.String(), ss.Connections,
-							ss.PacketsIn, ss.PacketsOut, ss.BytesIn, ss.BytesOut, ss.CPS, ss.BPSIn, ss.BPSOut,
-							ss.PPSIn, ss.PPSOut)
-					}
-				}
-				return nil
 			}
+
+			stats := o.ctx.Bool("stats")
+
+			title := "Protocol Vip:Vport (Scheduler)\n"
+			if stats {
+				title = "Protocol Vip:Vport (Scheduler) Conn PktsIn PktsOut BytesIn BytesOut CPS BPSIn BPSOut PPSIn PPSOut\n"
+			}
+			o.Print(title)
+
+			for _, s := range services {
+				if !stats {
+					o.Print("%s\n", s.String())
+				} else {
+					ss := s.Stats
+					o.Print("%s %d %d %d %d %d %d %d %d %d %d\n", s.String(), ss.Connections,
+						ss.PacketsIn, ss.PacketsOut, ss.BytesIn, ss.BytesOut, ss.CPS, ss.BPSIn, ss.BPSOut,
+						ss.PPSIn, ss.PPSOut)
+				}
+			}
+			return nil
 		})
 	}
 }
@@ -213,33 +239,34 @@ func (o *Operator) GetService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			if s, err := o.service(); err != nil {
+			s, err := o.service()
+			if err != nil {
 				return err
-			} else {
-				s, err := lvs.Handler.GetService(s)
-				if err != nil {
-					return err
-				}
-
-				stats := o.ctx.Bool("stats")
-
-				title := "Protocol Vip:Vport (Scheduler)\n"
-				if stats {
-					title = "Protocol Vip:Vport (Scheduler) Conn PktsIn PktsOut BytesIn BytesOut CPS BPSIn BPSOut PPSIn PPSOut\n"
-				}
-				o.Print(title)
-
-				if !stats {
-					o.Print("%s\n", s.String())
-				} else {
-					ss := s.Stats
-					o.Print("%s %d %d %d %d %d %d %d %d %d %d\n", s.String(), ss.Connections,
-						ss.PacketsIn, ss.PacketsOut, ss.BytesIn, ss.BytesOut, ss.CPS, ss.BPSIn, ss.BPSOut,
-						ss.PPSIn, ss.PPSOut)
-				}
-
-				return nil
 			}
+
+			s, err = lvs.Handler.GetService(s)
+			if err != nil {
+				return err
+			}
+
+			stats := o.ctx.Bool("stats")
+
+			title := "Protocol Vip:Vport (Scheduler)\n"
+			if stats {
+				title = "Protocol Vip:Vport (Scheduler) Conn PktsIn PktsOut BytesIn BytesOut CPS BPSIn BPSOut PPSIn PPSOut\n"
+			}
+			o.Print(title)
+
+			if !stats {
+				o.Print("%s\n", s.String())
+			} else {
+				ss := s.Stats
+				o.Print("%s %d %d %d %d %d %d %d %d %d %d\n", s.String(), ss.Connections,
+					ss.PacketsIn, ss.PacketsOut, ss.BytesIn, ss.BytesOut, ss.CPS, ss.BPSIn, ss.BPSOut,
+					ss.PPSIn, ss.PPSOut)
+			}
+
+			return nil
 		})
 	}
 }
@@ -249,17 +276,18 @@ func (o *Operator) ExistService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			if s, err := o.service(); err != nil {
+			s, err := o.service()
+			if err != nil {
 				return err
-			} else {
-				if ok := lvs.Handler.IsServicePresent(s); ok {
-					o.Print("vs:%s found\n", s.String())
-				} else {
-					o.Print("vs:%s not found\n", s.String())
-				}
-
-				return nil
 			}
+
+			if ok := lvs.Handler.IsServicePresent(s); ok {
+				o.Print("vs:%s found\n", s.String())
+			} else {
+				o.Print("vs:%s not found\n", s.String())
+			}
+
+			return nil
 		})
 	}
 }
@@ -269,11 +297,12 @@ func (o *Operator) AddService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			if s, err := o.service(); err != nil {
+			s, err := o.service()
+			if err != nil {
 				return err
-			} else {
-				return lvs.Handler.NewService(s)
 			}
+
+			return lvs.Handler.NewService(s)
 		})
 	}
 }
@@ -283,11 +312,12 @@ func (o *Operator) UpdateService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			if s, err := o.service(); err != nil {
+			s, err := o.service()
+			if err != nil {
 				return err
-			} else {
-				return lvs.Handler.UpdateService(s)
 			}
+
+			return lvs.Handler.UpdateService(s)
 		})
 	}
 }
@@ -297,11 +327,12 @@ func (o *Operator) DelService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			if s, err := o.service(); err != nil {
+			s, err := o.service()
+			if err != nil {
 				return err
-			} else {
-				return lvs.Handler.DelService(s)
 			}
+
+			return lvs.Handler.DelService(s)
 		})
 	}
 }
@@ -311,11 +342,12 @@ func (o *Operator) ZeroService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			if s, err := o.service(); err != nil {
+			s, err := o.service()
+			if err != nil {
 				return err
-			} else {
-				return lvs.Handler.ZeroService(s)
 			}
+
+			return lvs.Handler.ZeroService(s)
 		})
 	}
 }
@@ -475,7 +507,7 @@ func (o *Operator) ShowDaemon() cli.ActionFunc {
 
 			o.Print("State SyncId McastIfn")
 			for _, d := range daemons {
-				o.Print("%d %d %s", d.State, d.SyncId, d.McastIfn)
+				o.Print("%s %d %s", o.daemonState(d.State), d.SyncId, d.McastIfn)
 			}
 
 			return nil
@@ -488,7 +520,11 @@ func (o *Operator) AddDaemon() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			return lvs.Handler.NewDaemon(o.daemon())
+			daemon, err := o.daemon()
+			if err != nil {
+				return err
+			}
+			return lvs.Handler.NewDaemon(daemon)
 		})
 	}
 }
@@ -498,7 +534,11 @@ func (o *Operator) DelDaemon() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			return lvs.Handler.DelDaemon(o.daemon())
+			daemon, err := o.daemon()
+			if err != nil {
+				return err
+			}
+			return lvs.Handler.DelDaemon(daemon)
 		})
 	}
 }
