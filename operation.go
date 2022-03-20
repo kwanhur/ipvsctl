@@ -59,7 +59,7 @@ func (o *Operator) ShowVersion() func(c *cli.Context) {
 				return err
 			}
 
-			o.Print("IP Virtual Server version %s (size=%d)", info.Version.String(), info.ConnTableSize)
+			o.Print("IP Virtual Server version %s (size=%d)\n", info.Version.String(), info.ConnTableSize)
 			o.Print("\n")
 			o.Print("%s %s commit id %s\n", c.App.Name, c.App.Version, CommitID)
 			o.Print("Built by %s %s/%s compiler %s at %s\n", runtime.Version(), runtime.GOOS, runtime.GOARCH, runtime.Compiler, Built)
@@ -505,7 +505,7 @@ func (o *Operator) ShowDaemon() cli.ActionFunc {
 				return err
 			}
 
-			o.Print("State SyncId McastIfn")
+			o.Print("State SyncId McastIfn\n")
 			for _, d := range daemons {
 				o.Print("%s %d %s", o.daemonState(d.State), d.SyncId, d.McastIfn)
 			}
