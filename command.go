@@ -248,7 +248,7 @@ func (o *Operator) DaemonCommands() []*cli.Command {
 		{
 			Name:    "daemon",
 			Aliases: []string{"dm"},
-			Usage:   "Operates daemon",
+			Usage:   "Operates synchronization daemon",
 			Subcommands: []*cli.Command{
 				{
 					Name:    "show",
