@@ -31,13 +31,44 @@ A modern Linux Virtual Server controller.
 
 ## Description
 
-`ipvsctl` is similar to `ipvsadm`, `ipvsctl` support multiple modern operations, include sub-commands `service`, `server`, `timeout`, `zero`.
+`ipvsctl` is similar to `ipvsadm`, `ipvsctl` support multiple modern operations, include sub-commands `service`, `server`, `timeout`, `zero`, `daemon`.
 
 ## Commands
+
+```shell
+./ipvsctl help
+NAME:
+   ipvsctl - IP Virtual Server controller
+
+USAGE:
+   ipvsctl [global options] command [command options] [arguments...]
+
+VERSION:
+   v1.0.0
+
+DESCRIPTION:
+   A modern Linux Virtual Server controller
+
+AUTHOR:
+   kwanhur <huang_hua2012@163.com>
+
+COMMANDS:
+   zero, z                                                      Zero ipvs all the virtual service stats(byte packet and rate counters)
+   service, s, svc, vs                                          Operates virtual service[vip:vport protocol] (TCP UDP STCP)/(IPv4 IPv6)
+   server, ser, svr, d, dst, dest, destination, rs, realserver  Operates real server[rip:rport] (IPv4/IPv6)
+   timeout, t, to, out                                          Operates timeout (tcp tcpfin udp)
+   daemon, dm                                                   Operates synchronization daemon
+   help, h                                                      Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --help, -h     show help (default: false)
+   --version, -v  print the version (default: false)
+```
 
 ### Service
 
 `ipvsctl` can be used to set up, maintain or retrieve the virtual server table in the Linux kernel.
+
 Supported sub-commands `list`, `string`, `check`, `get`, `add`, `update`, `delete`, `zero`, `flush`.
 
 ```shell
@@ -436,6 +467,86 @@ USAGE:
 OPTIONS:
    --yes, --force, -f, -y  Are you agree to do it?[yes/no] (default: false)
    --help, -h              show help (default: false)
+```
+
+### Daemon
+
+The connection synchronization daemon is implemented inside the Linux kernel. The master daemon running at the primary load  balancer  multicasts  changes  of
+connections  periodically,  and  the backup daemon running at the backup load balancers receives multicast message and creates corresponding connections.
+Then, in case the primary load balancer fails, a backup load balancer will takeover, and it has state  of  almost  all  connections, so that almost all established connections can continue to access the service.
+
+The sync daemon currently only supports IPv4 connections.
+
+Supported sub-commands `show`, `add`, `del`.
+
+```shell
+./ipvsctl daemon -h
+NAME:
+   ipvsctl daemon - Operates daemon
+
+USAGE:
+   ipvsctl daemon command [command options] [arguments...]
+
+COMMANDS:
+   show, ls, get        Shows daemons of state, sync-id and mcast-interface
+   add, a, new, n, set  Add daemon, currently only supports IPv4 connections
+   del, d, del          Del daemon
+   help, h              Shows a list of commands or help for one command
+
+OPTIONS:
+   --help, -h  show help (default: false)
+```
+
+#### Show Daemon
+
+Show the connection synchronization daemon, like daemon's state, sync-id and mcast-interface.
+
+```shell
+./ipvsctl daemon show -h
+NAME:
+   ipvsctl daemon show - Shows daemons of state, sync-id and mcast-interface
+
+USAGE:
+   ipvsctl daemon show [command options] [arguments...]
+
+OPTIONS:
+   --help, -h  show help (default: false)
+```
+
+#### Add Daemon
+
+Start the connection synchronization daemon.
+
+```shell
+./ipvsctl daemon add -h
+NAME:
+   ipvsctl daemon add - Add daemon, currently only supports IPv4 connections
+
+USAGE:
+   ipvsctl daemon add [command options] [arguments...]
+
+OPTIONS:
+   --state value      Specify daemon state, option [master backup]
+   --sync-id value    Specify daemon syncId (default: 0)
+   --mcast-ifn value  Specify daemon mcast-interface
+   --help, -h         show help (default: false)
+```
+
+#### Del Daemon
+
+Stop the connection synchronization daemon.
+
+```shell
+./ipvsctl daemon del -h
+NAME:
+   ipvsctl daemon del - Del daemon
+
+USAGE:
+   ipvsctl daemon del [command options] [arguments...]
+
+OPTIONS:
+   --state value  Specify daemon state, option [master backup]
+   --help, -h     show help (default: false)
 ```
 
 ## License
