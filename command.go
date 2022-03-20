@@ -115,6 +115,13 @@ func (o *Operator) BasicCommands() []*cli.Command {
 			Action:  o.Zero(),
 			Flags:   flags,
 		},
+		{
+			Name:    "flush",
+			Aliases: []string{"f", "clear"},
+			Usage:   "Flush out the virtual server table",
+			Action:  o.FlushService(),
+			Flags:   flags,
+		},
 	}
 }
 
@@ -186,8 +193,9 @@ func (o *Operator) ServiceCommands() []*cli.Command {
 				{
 					Name:    "flush",
 					Aliases: []string{"f", "clear"},
-					Usage:   "Flush ipvs, all the rules will be clear",
+					Usage:   "Flush out the virtual server table",
 					Action:  o.FlushService(),
+					Flags:   flags,
 				},
 			},
 		},

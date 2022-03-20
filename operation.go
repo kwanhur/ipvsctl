@@ -352,7 +352,7 @@ func (o *Operator) ZeroService() cli.ActionFunc {
 	}
 }
 
-// FlushService clear out all of the Linux virtual table
+// FlushService clear out all the Linux virtual table
 func (o *Operator) FlushService() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
