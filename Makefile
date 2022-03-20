@@ -108,11 +108,3 @@ license-check:
 # make license-fix, fix code file's license declaration
 license-fix:
 	$(LICENSEEYE) header fix
-
-# make mdlint
-mdlint:
-	$(MDLINT) $(WORKROOT)
-
-# make mdlint-fix
-mdlint-fix:
-	$(MDLINT) --fix $(WORKROOT)
