@@ -45,4 +45,4 @@ jobs:
       - name: Check markdown
         shell: bash
         run: |
-          make mdlint
+          git ls-files | grep ".md$" | xargs -t markdownlint
