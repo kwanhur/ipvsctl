@@ -24,5 +24,6 @@ header:
     - 'VERSION'
     - 'go.mod'
     - 'go.sum'
+    - 'testdata/*'
 
   comment: on-failure
