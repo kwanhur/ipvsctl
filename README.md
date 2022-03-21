@@ -31,7 +31,7 @@ A modern Linux Virtual Server controller.
 
 ## Description
 
-`ipvsctl` is similar to `ipvsadm`, `ipvsctl` support multiple modern operations, include sub-commands `service`, `server`, `timeout`, `daemon`, `zero`, `flush`.
+`ipvsctl` is similar to `ipvsadm`, `ipvsctl` support multiple modern operations, include sub-commands `service`, `server`, `timeout`, `daemon`, `connection`, `zero`, `flush`.
 
 ## Commands
 
@@ -44,7 +44,7 @@ USAGE:
    ipvsctl [global options] command [command options] [arguments...]
 
 VERSION:
-   v1.0.0
+   v1.2.0
 
 DESCRIPTION:
    A modern Linux Virtual Server controller
@@ -59,6 +59,7 @@ COMMANDS:
    server, ser, svr, d, dst, dest, destination, rs, realserver  Operates real server[rip:rport] (IPv4/IPv6)
    timeout, t, to, out                                          Operates timeout (tcp tcpfin udp)
    daemon, dm                                                   Operates synchronization daemon
+   connection, c, conn                                          Operates connection
    help, h                                                      Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
@@ -565,6 +566,29 @@ USAGE:
 OPTIONS:
    --state value  Specify daemon state, option [master backup]
    --help, -h     show help (default: false)
+```
+
+### Connection
+
+Supported sub-commands `show`.
+
+#### Show Connection
+
+Shows current virtual service connections.
+
+```shell
+./ipvsctl conn show -h
+NAME:
+   ipvsctl connection show - Shows ip_vs current connection
+
+USAGE:
+   ipvsctl connection show [command options] [arguments...]
+
+OPTIONS:
+   --vip value             Specify vs IP address
+   --vport value           Specify vs port number, range [0-65535] (default: 0)
+   --path value, -p value  specify ip_vs connection file path (default: /proc/net/ip_vs_conn)
+   --help, -h              show help (default: false)
 ```
 
 ## License
