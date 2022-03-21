@@ -587,7 +587,11 @@ func (o *Operator) ShowConnection() cli.ActionFunc {
 	return func(c *cli.Context) error {
 		o.ctx = c
 		return o.doAction(func(lvs *IPVS) error {
-			body, err := os.ReadFile(c.Path("path"))
+			path := c.Path("path")
+			if path == "" {
+				path = "/proc/net/ip_vs_conn"
+			}
+			body, err := os.ReadFile(path)
 			if err != nil {
 				return err
 			}
