@@ -56,7 +56,7 @@ func toConnections(body []byte) []*Connection {
 	for _, line := range strings.Split(string(body), "\n") {
 		line = reg.ReplaceAllString(line, "\t")
 		lines := strings.Split(line, "\t")
-		if len(lines) < 9 || lines[0] != "Pro" {
+		if len(lines) < 9 || lines[0] == "Pro" {
 			continue
 		}
 
