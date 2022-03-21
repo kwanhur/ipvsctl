@@ -29,10 +29,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- ipvsctl sub-command `local-address`, `connection`
+- ipvsctl sub-command `local-address`
 - support import from stdin, compatible with ipvsadm dump format
 
+## [v1.2.0] - 2022-03-21
+
+### Added
+
+- ipvsctl sub-command `connection`
+
+### Fixed
+
+- show daemon title ends with newline
+- show version newline behind ip_vs information
+
 ## [v1.1.0] - 2022-03-20
+
+### Added
 
 - ipvsctl sub-command `flush`, `daemon`
 
