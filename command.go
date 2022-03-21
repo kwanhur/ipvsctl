@@ -52,6 +52,17 @@ var vsFlags = []cli.Flag{
 	},
 }
 
+var vsFlags2 = []cli.Flag{
+	&cli.StringFlag{
+		Name:  "vip",
+		Usage: "Specify vs IP address",
+	},
+	&cli.UintFlag{
+		Name:  "vport",
+		Usage: "Specify vs port number, range [0-65535]",
+	},
+}
+
 var vsOptionFlags = []cli.Flag{
 	&cli.StringFlag{
 		Name:    "scheduler",
@@ -345,6 +356,33 @@ func (o *Operator) TimeoutCommands() []*cli.Command {
 							DefaultText: "300",
 						},
 					},
+				},
+			},
+		},
+	}
+
+	return cmds
+}
+
+// ConnectionCommands return connection relate operations, like show
+func (o *Operator) ConnectionCommands() []*cli.Command {
+	var cmds = []*cli.Command{
+		{
+			Name:    "connection",
+			Aliases: []string{"c", "conn"},
+			Usage:   "Operates connection",
+			Subcommands: []*cli.Command{
+				{
+					Name:    "show",
+					Aliases: []string{"ls", "get"},
+					Usage:   "Shows ip_vs current connection",
+					Action:  o.ShowConnection(),
+					Flags: append(vsFlags2, &cli.PathFlag{
+						Name:        "path",
+						Aliases:     []string{"p"},
+						Usage:       "specify ip_vs connection file path",
+						DefaultText: "/proc/net/ip_vs_conn",
+					}),
 				},
 			},
 		},

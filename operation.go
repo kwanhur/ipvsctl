@@ -17,6 +17,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"os"
 	"runtime"
 	"syscall"
 	"time"
@@ -577,6 +578,39 @@ func (o *Operator) SetTimeout() cli.ActionFunc {
 				TimeoutUDP:    time.Duration(udp) * time.Second,
 			}
 			return lvs.Handler.SetConfig(&cfg)
+		})
+	}
+}
+
+// ShowConnection show current ip_vs connections
+func (o *Operator) ShowConnection() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			body, err := os.ReadFile(c.Path("path"))
+			if err != nil {
+				return err
+			}
+
+			vip := c.String("vip")
+			vport := uint16(c.Uint("vport"))
+
+			conns := toConnections(body)
+
+			title := "Proto CIP CPort VIP VPort SIP SPort State Expire\n"
+			o.Print(title)
+			for _, conn := range conns {
+				if vip != "" && conn.VirtualIP != vip {
+					continue
+				}
+				if vport != 0 && conn.VirtualPort != vport {
+					continue
+				}
+
+				o.Print("%s %s %d %s %d %s %d %s %s\n", conn.Protocol, conn.ClientIP, conn.ClientPort,
+					conn.VirtualIP, conn.VirtualPort, conn.ServerIP, conn.ServerPort, conn.State, conn.ExpireString())
+			}
+			return nil
 		})
 	}
 }
