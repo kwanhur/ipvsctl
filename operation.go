@@ -618,3 +618,111 @@ func (o *Operator) ShowConnection() cli.ActionFunc {
 		})
 	}
 }
+
+// ListAddress Retrieve all the local addresses then foreach to print
+func (o *Operator) ListAddress() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			s, err := o.service()
+			if err != nil {
+				return err
+			}
+
+			addrs, err := lvs.Handler.GetLocalAddresses(s)
+			if err != nil {
+				return err
+			}
+
+			o.Print("Addr Conflict Connection\n")
+			for _, addr := range addrs {
+				o.Print("%s %d %d\n", addr.Address.String(), addr.Conflicts, addr.Connections)
+			}
+
+			return nil
+		})
+	}
+}
+
+// AddAddress add local address into vs
+func (o *Operator) AddAddress() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			s, err := o.service()
+			if err != nil {
+				return err
+			}
+
+			ips := o.ctx.StringSlice("ip")
+			for _, ip := range ips {
+				lip := net.ParseIP(ip)
+				if lip == nil {
+					continue
+				}
+				addr := ipvs.LocalAddress{Address: lip}
+				err := lvs.Handler.NewLocalAddress(s, &addr)
+				if err != nil {
+					return err
+				}
+			}
+
+			return nil
+		})
+	}
+}
+
+// DelAddress delete local address from vs
+func (o *Operator) DelAddress() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			s, err := o.service()
+			if err != nil {
+				return err
+			}
+
+			ips := o.ctx.StringSlice("ip")
+			for _, ip := range ips {
+				lip := net.ParseIP(ip)
+				if lip == nil {
+					continue
+				}
+				addr := ipvs.LocalAddress{Address: lip}
+				err := lvs.Handler.DelLocalAddress(s, &addr)
+				if err != nil {
+					return err
+				}
+			}
+
+			return nil
+		})
+	}
+}
+
+// FlushAddress clear out local address from vs
+func (o *Operator) FlushAddress() cli.ActionFunc {
+	return func(c *cli.Context) error {
+		o.ctx = c
+		return o.doAction(func(lvs *IPVS) error {
+			s, err := o.service()
+			if err != nil {
+				return err
+			}
+
+			addrs, err := lvs.Handler.GetLocalAddresses(s)
+			if err != nil {
+				return err
+			}
+
+			for _, addr := range addrs {
+				err := lvs.Handler.DelLocalAddress(s, addr)
+				if err != nil {
+					return err
+				}
+			}
+
+			return nil
+		})
+	}
+}

@@ -37,6 +37,7 @@ func (o *Operator) Commands() []*cli.Command {
 	cmds = append(cmds, o.BasicCommands()...)
 	cmds = append(cmds, o.ServiceCommands()...)
 	cmds = append(cmds, o.ServerCommands()...)
+	cmds = append(cmds, o.AddressCommands()...)
 	cmds = append(cmds, o.TimeoutCommands()...)
 	cmds = append(cmds, o.DaemonCommands()...)
 	cmds = append(cmds, o.ConnectionCommands()...)
