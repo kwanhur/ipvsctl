@@ -33,6 +33,36 @@ A modern Linux Virtual Server controller.
 
 `ipvsctl` is similar to `ipvsadm`, `ipvsctl` support multiple modern operations, include sub-commands `service`, `server`, `timeout`, `daemon`, `connection`, `zero`, `flush`.
 
+## Table of Contents
+
+- [Commands](#Commands)
+  - [Service](#Service)
+    - [List Service](#list-service)
+    - [Check Service](#check-service)
+    - [Get Service](#get-service)
+    - [Add Service](#add-service)
+    - [Update Service](#update-service)
+    - [Delete Service](#delete-service)
+    - [Flush Service](#flush-service)
+  - [Server](#Server)
+    - [List Server](#list-server)
+    - [Add Server](#add-server)
+    - [Update Server](#update-server)
+    - [Delete Server](#delete-server)
+    - [Flush Server](#flush-server)
+  - [Timeout](#Timeout)
+    - [Show Timeout](#show-timeout)
+    - [Set Timeout](#set-timeout)
+  - [Zero](#Zero)
+  - [Flush](#Flush)
+  - [Daemon](#Daemon)
+    - [Show Daemon](#show-daemon)
+    - [Add Daemon](#add-daemon)
+    - [Delete Daemon](#delete-daemon)
+  - [Connection](#Connection)
+    - [Show Connection](#show-connection)
+- [License](#License)
+
 ## Commands
 
 ```shell
