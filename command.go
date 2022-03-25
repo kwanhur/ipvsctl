@@ -261,6 +261,55 @@ func (o *Operator) ServerCommands() []*cli.Command {
 	}
 }
 
+// AddressCommands  return local address relate operations, like add del flush
+func (o *Operator) AddressCommands() []*cli.Command {
+	return []*cli.Command{
+		{
+			Name:    "address",
+			Aliases: []string{"a", "addr", "local-address", "la", "laddr"},
+			Usage:   "Operates local address (IPv4/IPv6)",
+			Subcommands: []*cli.Command{
+				{
+					Name:    "list",
+					Aliases: []string{"l", "ls"},
+					Usage:   "List ipvs local address",
+					Action:  o.ListAddress(),
+					Flags:   vsFlags,
+				},
+				{
+					Name:    "add",
+					Aliases: []string{"a", "new", "n", "set"},
+					Usage:   "Add ipvs local address",
+					Action:  o.AddAddress(),
+					Flags: append(vsFlags, &cli.StringSliceFlag{
+						Name:     "ip",
+						Usage:    "Specify vs local address",
+						Required: true,
+					}),
+				},
+				{
+					Name:    "del",
+					Aliases: []string{"d", "delete"},
+					Usage:   "Del ipvs local address",
+					Action:  o.DelAddress(),
+					Flags: append(vsFlags, &cli.StringSliceFlag{
+						Name:     "ip",
+						Usage:    "Specify vs local address",
+						Required: true,
+					}),
+				},
+				{
+					Name:    "flush",
+					Aliases: []string{"f", "clear", "purge"},
+					Usage:   "Flush all the local address",
+					Action:  o.FlushAddress(),
+					Flags:   vsFlags,
+				},
+			},
+		},
+	}
+}
+
 // DaemonCommands return daemon relate operations, like show add del
 func (o *Operator) DaemonCommands() []*cli.Command {
 	return []*cli.Command{
