@@ -282,8 +282,8 @@ func (o *Operator) AddressCommands() []*cli.Command {
 					Usage:   "Add ipvs local address",
 					Action:  o.AddAddress(),
 					Flags: append(vsFlags, &cli.StringSliceFlag{
-						Name:     "ip",
-						Usage:    "Specify vs local address",
+						Name:     "lip",
+						Usage:    "Specify vs local address, multiple with separator comma",
 						Required: true,
 					}),
 				},
@@ -293,8 +293,8 @@ func (o *Operator) AddressCommands() []*cli.Command {
 					Usage:   "Del ipvs local address",
 					Action:  o.DelAddress(),
 					Flags: append(vsFlags, &cli.StringSliceFlag{
-						Name:     "ip",
-						Usage:    "Specify vs local address",
+						Name:     "lip",
+						Usage:    "Specify vs local address, multiple with separator comma",
 						Required: true,
 					}),
 				},
