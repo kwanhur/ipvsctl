@@ -654,7 +654,7 @@ func (o *Operator) AddAddress() cli.ActionFunc {
 				return err
 			}
 
-			ips := o.ctx.StringSlice("ip")
+			ips := o.ctx.StringSlice("lip")
 			for _, ip := range ips {
 				lip := net.ParseIP(ip)
 				if lip == nil {
@@ -682,7 +682,7 @@ func (o *Operator) DelAddress() cli.ActionFunc {
 				return err
 			}
 
-			ips := o.ctx.StringSlice("ip")
+			ips := o.ctx.StringSlice("lip")
 			for _, ip := range ips {
 				lip := net.ParseIP(ip)
 				if lip == nil {
