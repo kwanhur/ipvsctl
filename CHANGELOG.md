@@ -29,8 +29,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- ipvsctl sub-command `local-address`
 - support import from stdin, compatible with ipvsadm dump format
+
+## [v1.3.0] - 2022-03-27
+
+- ipvsctl sub-command `local-address`
 
 ## [v1.2.0] - 2022-03-21
 

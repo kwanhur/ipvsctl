@@ -80,7 +80,7 @@ USAGE:
    ipvsctl [global options] command [command options] [arguments...]
 
 VERSION:
-   v1.2.0
+   v1.3.0
 
 DESCRIPTION:
    A modern Linux Virtual Server controller
