@@ -40,6 +40,8 @@ repos:
       - id: go-lint
       - id: go-imports
       - id: go-mod-tidy
+      - id: go-cyclo
+        args: [ -over=15 ]
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.31.1
