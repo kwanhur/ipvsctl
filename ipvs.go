@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
 package main
 
 import (
@@ -32,13 +31,15 @@ func NewIPVS() (*IPVS, error) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	if handler, err := ipvs.New(""); err != nil {
+	handler, err := ipvs.New("")
+	if err != nil {
 		return nil, err
-	} else {
-		return &IPVS{
-			Handler: handler,
-		}, nil
 	}
+
+	return &IPVS{
+		Handler: handler,
+	}, nil
+
 }
 
 // Close close ipvs netlink socket Handler
