@@ -34,7 +34,7 @@ repos:
           - --markdown-linebreak-ext=md
 
   - repo: https://github.com/dnephin/pre-commit-golang
-    rev: v0.5.0
+    rev: v0.5.1
     hooks:
       - id: go-fmt
       - id: go-lint
@@ -44,7 +44,7 @@ repos:
         args: [ -over=15 ]
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.31.1
+    rev: v0.33.0
     hooks:
       - id: markdownlint
       - id: markdownlint-fix
